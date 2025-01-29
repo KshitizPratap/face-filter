@@ -1,210 +1,55 @@
 // some globalz:
 let THREECAMERA = null;
 let ISDETECTED = false;
-let FACEMESH = null, GROUPOBJ3D = null;
-
+let FACEMESH = null,
+  GROUPOBJ3D = null;
 
 let ANGELMESH1 = null;
-let ANGELMESH2 = null;
-let ANGELMESH3 = null;
-let MIXERANGEL1 = null;
-let MIXERANGEL2 = null;
-let MIXERANGEL3 = null;
-let ACTIONANGEL1 = null;
-let ACTIONANGEL2 = null;
-let ACTIONANGEL3 = null;
-
-let HARPMESH1 = null;
-let HARPMESH2 = null;
-let HARPMESH3 = null;
-let MIXERHARP1 = null;
-let MIXERHARP2 = null;
-let MIXERHARP3 = null;
-let ACTIONHARP1 = null;
-let ACTIONHARP2 = null;
-let ACTIONHARP3 = null;
-
-let DEMONMESH1 = null;
-let DEMONMESH2 = null;
-let DEMONMESH3 = null;
-let MIXERDEMON1 = null;
-let MIXERDEMON2 = null;
-let MIXERDEMON3 = null;
-let ACTIONDEMON1 = null;
-let ACTIONDEMON2 = null;
-let ACTIONDEMON3 = null;
-
-let FORKMESH1 = null;
-let FORKMESH2 = null;
-let FORKMESH3 = null;
-let MIXERFORK1 = null;
-let MIXERFORK2 = null;
-let MIXERFORK3 = null;
-let ACTIONFORK1 = null;
-let ACTIONFORK2 = null;
-let ACTIONFORK3 = null;
 
 const states = {
   notLoaded: -1,
   intro: 0,
   idle: 1,
-  fight: 2
-}
+  fight: 2,
+};
 let state = states.notLoaded;
 let isLoaded = false;
-
 
 // callback : launched if a face is detected or lost
 function detect_callback(isDetected) {
   if (isDetected) {
-    console.log('INFO in detect_callback(): DETECTED');
+    console.log("INFO in detect_callback(): DETECTED");
   } else {
-    console.log('INFO in detect_callback(): LOST');
+    console.log("INFO in detect_callback(): LOST");
   }
 }
-
 
 // // build the 3D. called once when Jeeliz Face Filter is OK
 function init_threeScene(spec) {
   const threeStuffs = JeelizThreeHelper.init(spec, detect_callback);
-  $('#openMouthInstructions').hide();
-  const loadingManager = new THREE.LoadingManager();
 
-  /*
-    LOAD ALL THE ANGEL MESHS
-  */
-  const loaderAngelIntro = new THREE.JSONLoader(loadingManager);
+  const textureAngel = new THREE.TextureLoader().load("./models/sample.png");
 
-  loaderAngelIntro.load(
-    './models/angel/angel_intro.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/angel/diffuse_angel.png"),
-        morphTargets: true
-      });
+  const materialAngel = new THREE.MeshBasicMaterial({
+    map: textureAngel,
+    transparent: true,
+  });
 
-      ANGELMESH1 = new THREE.Mesh(geometry, mat);
+  // Create a plane to display the images
+  const geometry = new THREE.PlaneGeometry(1, 1); // Adjust size as needed
 
-      ANGELMESH1.frustumCulled = false;
-      ANGELMESH1.side = THREE.DoubleSide;
+  ANGELMESH1 = new THREE.Mesh(geometry, materialAngel);
 
-      MIXERANGEL1 = new THREE.AnimationMixer(ANGELMESH1);
-      const clipsAngel = ANGELMESH1.geometry.animations;
-      const clipAngel = clipsAngel[0];
+  // Position the images in front of the face
+  ANGELMESH1.position.set(0.075, -2.2, 0);
+  ANGELMESH1.scale.set(2.25, 4, 2.25); // Scale image
 
-      ACTIONANGEL1 = MIXERANGEL1.clipAction(clipAngel);
-    }
-  )
+  ANGELMESH1.visible = true; // Ensure image is visible
 
-  const loaderAngelIdle = new THREE.JSONLoader(loadingManager);
+  GROUPOBJ3D.add(ANGELMESH1);
 
-  loaderAngelIdle.load(
-    './models/angel/angel_idle.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/angel/diffuse_angel.png"),
-        morphTargets: true
-      });
-
-      ANGELMESH2 = new THREE.Mesh(geometry, mat);
-
-      ANGELMESH2.frustumCulled = false;
-      ANGELMESH2.side = THREE.DoubleSide;
-      ANGELMESH2.visible = false;
-
-      MIXERANGEL2 = new THREE.AnimationMixer(ANGELMESH2);
-      const clipsAngel = ANGELMESH2.geometry.animations;
-      const clipAngel = clipsAngel[0];
-
-      ACTIONANGEL2 = MIXERANGEL2.clipAction(clipAngel);
-    }
-  )
-
-  /*
-    LOAD ALL DEMON MESHS
-  */
-  const loaderDemonIntro = new THREE.JSONLoader(loadingManager);
-
-  loaderDemonIntro.load(
-    './models/demon/demon_intro.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/demon/diffuse_demon.png"),
-        morphTargets: true
-      });
-
-      DEMONMESH1 = new THREE.Mesh(geometry, mat);
-
-      DEMONMESH1.frustumCulled = false;
-      DEMONMESH1.side = THREE.DoubleSide;
-
-      MIXERDEMON1 = new THREE.AnimationMixer(DEMONMESH1);
-      const clipsDemon = DEMONMESH1.geometry.animations;
-      const clipDemon = clipsDemon[0];
-
-      ACTIONDEMON1 = MIXERDEMON1.clipAction(clipDemon);
-    }
-  )
-
-  const loaderDemonIdle = new THREE.JSONLoader(loadingManager);
-
-  loaderDemonIdle.load(
-    './models/demon/demon_idle.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/demon/diffuse_demon.png"),
-        morphTargets: true
-      });
-
-      DEMONMESH2 = new THREE.Mesh(geometry, mat);
-
-      DEMONMESH2.frustumCulled = false;
-      DEMONMESH2.side = THREE.DoubleSide;
-      DEMONMESH2.visible = false;
-
-      MIXERDEMON2 = new THREE.AnimationMixer(DEMONMESH2);
-      const clipsDemon = DEMONMESH2.geometry.animations;
-      const clipDemon = clipsDemon[0];
-
-      ACTIONDEMON2 = MIXERDEMON2.clipAction(clipDemon);
-    }
-  )
-
-
-  // CREATE THE MASK
-  FACEMESH = JeelizThreeHelper.create_threejsOccluder('./models/face/face.json');
-  FACEMESH.frustumCulled = false;
-  FACEMESH.scale.multiplyScalar(1.1);
-  FACEMESH.position.set(0, 0.7, -0.75);
-  FACEMESH.renderOrder = 100000;
-
-  loadingManager.onLoad = () => {
-    isLoaded = true;
-    GROUPOBJ3D.add(
-      ANGELMESH1,
-      ANGELMESH2,
-      ANGELMESH3,
-      HARPMESH1,
-      HARPMESH2,
-      HARPMESH3,
-      DEMONMESH1,
-      DEMONMESH2,
-      DEMONMESH3,
-      FORKMESH1,
-      FORKMESH2,
-      FORKMESH3,
-      FACEMESH);
-
-    GROUPOBJ3D.scale.multiplyScalar(1.4);
-    GROUPOBJ3D.position.y -= 0.5;
-    GROUPOBJ3D.position.z -= 0.5;
-
-
-    addDragEventListener(GROUPOBJ3D);
-    threeStuffs.faceObject.add(GROUPOBJ3D);
-
-    animate_intro();
-  } 
+  addDragEventListener(GROUPOBJ3D);
+  threeStuffs.faceObject.add(GROUPOBJ3D);
 
   // CREATE THE CAMERA
   THREECAMERA = JeelizThreeHelper.create_camera();
@@ -214,60 +59,35 @@ function main() {
   GROUPOBJ3D = new THREE.Object3D();
 
   JeelizResizer.size_canvas({
-    canvasId: 'jeeFaceFilterCanvas',
-    callback: function(isError, bestVideoSettings){
+    canvasId: "jeeFaceFilterCanvas",
+    callback: function (isError, bestVideoSettings) {
       init_faceFilter(bestVideoSettings);
-    }
-  })
+    },
+  });
 }
-
 
 function init_faceFilter(videoSettings) {
   JEELIZFACEFILTER.init({
-    canvasId: 'jeeFaceFilterCanvas',
-    NNCPath: '../../../neuralNets/', // path of NN_DEFAULT.json file
+    canvasId: "jeeFaceFilterCanvas",
+    NNCPath: "../../../neuralNets/", // path of NN_DEFAULT.json file
     videoSettings: videoSettings,
     callbackReady: function (errCode, spec) {
       if (errCode) {
-        console.log('AN ERROR HAPPENED. SORRY BRO :( . ERR =', errCode);
+        console.log("AN ERROR HAPPENED. SORRY BRO :( . ERR =", errCode);
         return;
       }
 
-      console.log('INFO: JEELIZFACEFILTER IS READY');
+      console.log("INFO: JEELIZFACEFILTER IS READY");
       init_threeScene(spec);
     },
 
     // called at each render iteration (drawing loop):
     callbackTrack: function (detectState) {
-      ISDETECTED = JeelizThreeHelper.get_isDetected();
-
-      switch (state) {
-        case 0:
-          MIXERANGEL1.update(0.08);
-          MIXERHARP1.update(0.08);
-          MIXERDEMON1.update(0.08);
-          MIXERFORK1.update(0.08);
-          break
-        case 1:
-          MIXERANGEL2.update(0.08);
-          MIXERHARP2.update(0.08);
-          MIXERDEMON2.update(0.08);
-          MIXERFORK2.update(0.08);
-          break
-        case 2:
-          MIXERANGEL3.update(0.08);
-          MIXERHARP3.update(0.08);
-          MIXERDEMON3.update(0.08);
-          MIXERFORK3.update(0.08);
-          break
-        default:
-      }
 
       // trigger the render of the THREE.JS SCENE
       JeelizThreeHelper.render(detectState, THREECAMERA);
-    } // end callbackTrack()
+    }, // end callbackTrack()
   }); // end JEELIZFACEFILTER.init call
 }
 
-
-window.addEventListener('load', main);
+window.addEventListener("load", main);
