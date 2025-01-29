@@ -64,7 +64,7 @@ function detect_callback(isDetected) {
 }
 
 
-// build the 3D. called once when Jeeliz Face Filter is OK
+// // build the 3D. called once when Jeeliz Face Filter is OK
 function init_threeScene(spec) {
   const threeStuffs = JeelizThreeHelper.init(spec, detect_callback);
   $('#openMouthInstructions').hide();
@@ -120,108 +120,6 @@ function init_threeScene(spec) {
     }
   )
 
-  const loaderAngelFight = new THREE.JSONLoader(loadingManager);
-
-  loaderAngelFight.load(
-    './models/angel/angel_fight.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/angel/diffuse_angel.png"),
-        morphTargets: true
-      });
-
-      ANGELMESH3 = new THREE.Mesh(geometry, mat);
-
-      ANGELMESH3.frustumCulled = false;
-      ANGELMESH3.side = THREE.DoubleSide;
-      ANGELMESH3.visible = false;
-
-      MIXERANGEL3 = new THREE.AnimationMixer(ANGELMESH3);
-      const clipsAngel = ANGELMESH3.geometry.animations;
-      const clipAngel = clipsAngel[0];
-
-      ACTIONANGEL3 = MIXERANGEL3.clipAction(clipAngel);
-    }
-  )
-
-  /*
-    LOAD ALL HARP MESHS
-  */
-  const loaderHarpIntro = new THREE.JSONLoader(loadingManager);
-
-  loaderHarpIntro.load(
-    './models/angel/harp_intro.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/angel/harpe.jpg"),
-        morphTargets: true
-      });
-
-      HARPMESH1 = new THREE.Mesh(geometry, mat);
-
-      HARPMESH1.frustumCulled = false;
-      HARPMESH1.side = THREE.DoubleSide;
-
-      MIXERHARP1 = new THREE.AnimationMixer(HARPMESH1);
-      const clipsHarp = HARPMESH1.geometry.animations;
-
-
-      const clipHarp = clipsHarp[0];
-
-      ACTIONHARP1 = MIXERHARP1.clipAction(clipHarp);  
-    }
-  )
-
-  const loaderHarpIdle = new THREE.JSONLoader(loadingManager);
-
-  loaderHarpIdle.load(
-    './models/angel/harp_idle.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/angel/harpe.jpg"),
-        morphTargets: true
-      });
-
-      HARPMESH2 = new THREE.Mesh(geometry, mat);
-
-      HARPMESH2.frustumCulled = false;
-      HARPMESH2.side = THREE.DoubleSide;
-      HARPMESH2.visible = false;
-
-      MIXERHARP2 = new THREE.AnimationMixer(HARPMESH2);
-      const clipsHarp = HARPMESH2.geometry.animations;
-
-
-      const clipHarp = clipsHarp[0];
-
-      ACTIONHARP2 = MIXERHARP2.clipAction(clipHarp);   
-    }
-  )
-
-  const loaderHarpFight = new THREE.JSONLoader(loadingManager);
-
-  loaderHarpFight.load(
-    './models/angel/harp_fight.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/angel/harpe.jpg"),
-        morphTargets: true
-      });
-
-      HARPMESH3 = new THREE.Mesh(geometry, mat);
-
-      HARPMESH3.frustumCulled = false;
-      HARPMESH3.side = THREE.DoubleSide;
-      HARPMESH3.visible = false;
-
-      MIXERHARP3 = new THREE.AnimationMixer(HARPMESH3);
-      const clipsHarp = HARPMESH3.geometry.animations;
-      const clipHarp = clipsHarp[0];
-
-      ACTIONHARP3 = MIXERHARP3.clipAction(clipHarp);      
-    }
-  )
-
   /*
     LOAD ALL DEMON MESHS
   */
@@ -272,106 +170,6 @@ function init_threeScene(spec) {
     }
   )
 
-  const loaderDemonFight = new THREE.JSONLoader(loadingManager);
-
-  loaderDemonFight.load(
-    './models/demon/demon_fight.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/demon/diffuse_demon.png"),
-        morphTargets: true
-      });
-
-      DEMONMESH3 = new THREE.Mesh(geometry, mat);
-
-      DEMONMESH3.frustumCulled = false;
-      DEMONMESH3.side = THREE.DoubleSide;
-      DEMONMESH3.visible = false;
-
-      MIXERDEMON3 = new THREE.AnimationMixer(DEMONMESH3);
-      const clipsDemon = DEMONMESH3.geometry.animations;
-      const clipDemon = clipsDemon[0];
-
-      ACTIONDEMON3 = MIXERDEMON3.clipAction(clipDemon);
-    }
-  )
-
-  /*
-    LOAD ALL FORK MESHS
-  */
-  const loaderForkIntro = new THREE.JSONLoader(loadingManager);
-
-  loaderForkIntro.load(
-    './models/demon/fourche_intro.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/demon/fourche.jpg"),
-        morphTargets: true
-      });
-
-      FORKMESH1 = new THREE.Mesh(geometry, mat);
-
-      FORKMESH1.frustumCulled = false;
-      FORKMESH1.side = THREE.DoubleSide;
-
-      MIXERFORK1 = new THREE.AnimationMixer(FORKMESH1);
-      const clipsFork = FORKMESH1.geometry.animations;
-
-
-      const clipFork = clipsFork[0];
-
-      ACTIONFORK1 = MIXERFORK1.clipAction(clipFork);
-    }
-  )
-
-  const loaderForkIdle = new THREE.JSONLoader(loadingManager);
-
-  loaderForkIdle.load(
-    './models/demon/fourche_idle.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/demon/fourche.jpg"),
-        morphTargets: true
-      });
-
-      FORKMESH2 = new THREE.Mesh(geometry, mat);
-
-      FORKMESH2.frustumCulled = false;
-      FORKMESH2.side = THREE.DoubleSide;
-      FORKMESH2.visible = false;
-
-      MIXERFORK2 = new THREE.AnimationMixer(FORKMESH2);
-      const clipsFork = FORKMESH2.geometry.animations;
-      const clipFork = clipsFork[0];
-
-      ACTIONFORK2 = MIXERFORK2.clipAction(clipFork);  
-    }
-  )
-
-  const loaderForkFight = new THREE.JSONLoader(loadingManager);
-
-  loaderForkFight.load(
-    './models/demon/fourche_fight.json',
-    function (geometry) {
-      const mat = new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./models/demon/fourche.jpg"),
-        morphTargets: true
-      });
-
-      FORKMESH3 = new THREE.Mesh(geometry, mat);
-
-      FORKMESH3.frustumCulled = false;
-      FORKMESH3.side = THREE.DoubleSide;
-      FORKMESH3.visible = false;
-
-      MIXERFORK3 = new THREE.AnimationMixer(FORKMESH3);
-      const clipsFork = FORKMESH3.geometry.animations;
-      const clipFork = clipsFork[0];
-
-      ACTIONFORK3 = MIXERFORK3.clipAction(clipFork);
-    }
-  )
-
 
   // CREATE THE MASK
   FACEMESH = JeelizThreeHelper.create_threejsOccluder('./models/face/face.json');
@@ -412,94 +210,6 @@ function init_threeScene(spec) {
   THREECAMERA = JeelizThreeHelper.create_camera();
 } // end init_threeScene()
 
-
-function animate_intro () {
-  state = states.intro;
-
-  ACTIONANGEL1.clampWhenFinished = true;
-  ACTIONHARP1.clampWhenFinished = true;
-  ACTIONDEMON1.clampWhenFinished = true;
-  ACTIONFORK1.clampWhenFinished = true;
-
-
-  MIXERANGEL1.addEventListener('loop', () => {
-    animate_idle();
-  });
-
-  ACTIONANGEL1.play();
-  ACTIONHARP1.play();
-  ACTIONDEMON1.play();
-  ACTIONFORK1.play();
-}
-
-
-function animate_idle() {
-  $('#openMouthInstructions').show();
-
-  state = states.idle;
-
-  // Stop animation + hide meshes
-  ACTIONANGEL1.stop();
-  ACTIONHARP1.stop();
-  ACTIONDEMON1.stop();
-  ACTIONFORK1.stop();
-  ANGELMESH1.visible = false;
-  HARPMESH1.visible = false;
-  DEMONMESH1.visible = false;
-  FORKMESH1.visible = false;
-
-  // Stop animation + hide meshes
-  ACTIONANGEL3.stop();
-  ACTIONHARP3.stop();
-  ACTIONDEMON3.stop();
-  ACTIONFORK3.stop();
-  ANGELMESH3.visible = false;
-  HARPMESH3.visible = false;
-  DEMONMESH3.visible = false;
-  FORKMESH3.visible = false;
-
-  // Show meshes + start animation
-  ANGELMESH2.visible = true;
-  HARPMESH2.visible = true;
-  DEMONMESH2.visible = true;
-  FORKMESH2.visible = true;
-  ACTIONANGEL2.play();
-  ACTIONHARP2.play();
-  ACTIONDEMON2.play();
-  ACTIONFORK2.play();
-}
-
-
-function animate_fight() {
-  state = states.fight;
-
-  // Stop animation + hide meshes
-  ACTIONANGEL2.stop();
-  ACTIONHARP2.stop();
-  ACTIONDEMON2.stop();
-  ACTIONFORK2.stop();
-  ANGELMESH2.visible = false;
-  HARPMESH2.visible = false;
-  DEMONMESH2.visible = false;
-  FORKMESH2.visible = false;
-
-  MIXERFORK3.addEventListener('loop', () => {
-    animate_idle();
-  });
-
-  // Show meshes + start animation
-  ANGELMESH3.visible = true;
-  HARPMESH3.visible = true;
-  DEMONMESH3.visible = true;
-  FORKMESH3.visible = true;
-  ACTIONANGEL3.play();
-  ACTIONHARP3.play();
-  ACTIONDEMON3.play();
-  ACTIONFORK3.play();
-}
-
-
-// Entry point:
 function main() {
   GROUPOBJ3D = new THREE.Object3D();
 
@@ -530,11 +240,6 @@ function init_faceFilter(videoSettings) {
     // called at each render iteration (drawing loop):
     callbackTrack: function (detectState) {
       ISDETECTED = JeelizThreeHelper.get_isDetected();
-      
-      if (detectState.expressions[0] >= 0.8 && isLoaded && state !== 0 && state !== 2) {
-        animate_fight();
-      }
-
 
       switch (state) {
         case 0:
