@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-language" content="en-EN" />
+
+    <title>JEELIZ FACEFILTER: ANGEL/DEMON</title>
+
+    <!-- INCLUDE JEELIZ FACEFILTER SCRIPT -->
+    <script src="./dist/jeelizFaceFilter.js"></script>
+
+    <!-- INCLUDE THREE.JS -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.js"
+      integrity="sha512-ClX37nIS3mwIwgRaJ/gAkunR1J/i7yDsHTDRJfyJVWgadpI7eJ+JOpQ8bPY/tZRJPsyuLDKmG0dyrYvtSuXH9A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <!-- INCLUDE JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- INCLUDE JEELIZRESIZER -->
+    <script src="./helpers/JeelizResizer.js"></script>
+
+    <!-- INCLUDE JEELIZTHREEJSHELPER -->
+    <script src="./helpers/JeelizThreeHelper.js"></script>
+
+    <!-- INCLUDE DEMO SCRIPT -->
+    <script src="./main.js"></script>
+
+    <!-- INCLUDE FORK ME ON GITHUB BANNER -->
+    <!-- <script src="../../appearance/widget.js"></script> -->
+
+    <!-- IMPORT HELPER METHODS -->
+    <script src="../../../helpers/addDragEventListener.js"></script>
+
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+    <style>
+      #openMouthInstructions {
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        transform: translate(-50%);
+        z-index: 1000;
+        font-size: 20pt;
+        text-shadow: 0 0 1px black;
+        font-family: Helvetica Neu, Arial, sans-serif;
+        color: white;
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="openMouthInstructions">Say "Oooh!" 😮</div>
+    <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
+  </body>
+</html>
