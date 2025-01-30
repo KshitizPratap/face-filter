@@ -4,7 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="content-language" content="en-EN" />
 
-    <title>JEELIZ FACEFILTER: ANGEL/DEMON</title>
+    <title>PMJ Jewellers | Virtual Try-on</title>
+    <link rel="icon" href="./public/favicon.png" type="image/x-icon" />
 
     <!-- INCLUDE JEELIZ FACEFILTER SCRIPT -->
     <script src="./dist/jeelizFaceFilter.js"></script>
@@ -55,6 +56,96 @@
   </head>
 
   <body>
-    <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
+    <header>
+      <img src="./public/logo.png" class="logo" alt="logo" loading="lazy" />
+      <h2 class="main-heading">Necklace Virtual Try-on</h2>
+    </header>
+    <div class="loader"><p></p></div>
+    <div class="container"></div>
+    <div class="canvasContainer removeCanvasContainer">
+      <h3></h3>
+      <span></span>
+      <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
+    </div>
   </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const loader = document.querySelector(".loader");
+      const loaderMsg = document.querySelector(".loader p");
+      loaderMsg.textContent = "Loading please wait";
+
+      setInterval(() => {
+        loaderMsg.textContent += ".";
+        if (loaderMsg.textContent.split(".").length === 5) {
+          loaderMsg.textContent = "Loading please wait";
+        }
+      }, 0.5 * 1000);
+
+      setTimeout(() => {
+        appendNecklaceCards();
+        document.querySelector("body").removeChild(loader);
+      }, 6 * 1000);
+    });
+
+    const appendNecklaceCards = () => {
+      const container = document.querySelector(".container");
+      container.classList.add("containerStyles");
+
+      necklaceArray.forEach((necklace, index) => {
+        // Create card element
+        const card = document.createElement("div");
+        card.classList.add("card");
+        const imgContainer = document.createElement("div");
+        imgContainer.classList.add("imgContainer");
+
+        const heading = document.createElement("h4");
+        heading.textContent = necklace.label;
+
+        const description = document.createElement("span");
+        description.textContent = necklace.description;
+
+        // Create image element
+        const img = document.createElement("img");
+        img.src = necklace.image;
+        img.alt = `Necklace ${index + 1}`;
+        img.loading = "lazy";
+
+        card.appendChild(heading);
+        card.appendChild(description);
+        card.appendChild(imgContainer);
+        imgContainer.appendChild(img);
+
+        // Add click event to change necklace in Three.js scene
+        card.addEventListener("click", () => {
+          handleTryOn(necklace, index);
+        });
+
+        // Append card to container
+        container.appendChild(card);
+      });
+    };
+
+    const handleTryOn = (necklace, index) => {
+      const canvasContainer = document.querySelector(".canvasContainer");
+      canvasContainer.classList.remove("removeCanvasContainer");
+
+      const tryOnHeading = document.querySelector(".canvasContainer h3");
+      tryOnHeading.textContent = necklace.label;
+
+      const tryOnDescription = document.querySelector(".canvasContainer span");
+      tryOnDescription.textContent = necklace.description;
+
+      const backdrop = document.createElement("div");
+      backdrop.classList.add("backdrop");
+      backdrop.addEventListener("click", () => {
+        canvasContainer.classList.add("removeCanvasContainer");
+        document.querySelector("body").removeChild(backdrop);
+      });
+
+      document.querySelector("body").prepend(backdrop);
+
+      init_threeScene(index);
+    };
+  </script>
 </html>

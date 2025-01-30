@@ -1,3 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 a {
   color: #eee;
   text-decoration: none;
@@ -14,26 +21,144 @@ body {
   background-position: center;
   background-size: contain;
   margin: 0px;
+  font-family: Urbanist;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  height: 70px;
+  background-image: url("./public/navbg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  position: relative;
+}
+
+.logo {
+  height: 70%;
+  position: absolute;
+  left: 2rem;
+  top: 15%;
+}
+
+header .main-heading {
+  width: 100%;
+  text-align: center;
+  color: #266d9f;
+  font-weight: normal;
+}
+
+.loader {
+  height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader p {
+  font-size: 36px;
+  font-weight: 500;
+}
+
+.containerStyles {
+  height: calc(100vh - 100px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 5rem;
+  overflow-x: auto;
+}
+
+.container .card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border: 1px solid #ccc;
+  padding: 1rem 2rem;
+  height: 280px;
+  width: 200px;
+  border-radius: 10px;
+  box-shadow: -1rem 0 3rem #b5b5b5;
+  background-color: #fff6ed;
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+  cursor: pointer;
+}
+
+.container .card:not(:first-child) {
+  margin-left: -50px;
+}
+
+.container .card:hover {
+  transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
+
+.container .card:hover ~ .card {
+  position: relative;
+  left: 50px;
+  transition: 0.4s ease-out;
+}
+
+.card .imgContainer {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.container .card h4 {
+}
+
+.container .card span {
+  font-size: 12px;
+}
+
+.container .card img {
+  align-self: center;
+  width: 100%;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 5;
+}
+
+.removeCanvasContainer {
+  display: none !important;
+}
+
+.canvasContainer {
+  position: fixed;
+  z-index: 10;
+  top: 5vh;
+  left: 27.5vw;
+  height: 90vh;
+  width: 45vw;
+  padding: 3rem;
+  border-radius: 8px;
+  background-color: #fff6ed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  gap: 0.5rem;
+}
+
+.canvasContainer h3 {
+  font-size: 24px;
 }
 
 #jeeFaceFilterCanvas {
-  z-index: 10;
-  position: absolute;
-  max-height: 100%;
-  max-width: 100%;
-  left: 50%;
-  top: 50%;
-  width: 100vmin;
-  transform: translate(-50%, -50%) rotateY(180deg);
-}
-
-#threeCanvas {
-  z-index: 11;
-  position: absolute;
-  max-height: 100%;
-  max-width: 100%;
-  left: 50%;
-  top: 50%;
-  width: 100vmin;
-  transform: translate(-50%, -50%) rotateY(180deg);
+  height: 100%;
+  width: 90%;
+  align-self: center;
 }

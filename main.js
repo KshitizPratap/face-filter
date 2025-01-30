@@ -4,6 +4,8 @@ let JEWELLERYMASH = null;
 let FACEMESH = null;
 
 let filterSpecs = null;
+let threeStuffs = null;
+let selectedJewelleryIndex = 0;
 
 function detect_callback(isDetected) {
   if (isDetected) {
@@ -17,13 +19,22 @@ function init_threeScene(selectedJewelleryIndex) {
   const { position, scale, image } = necklaceArray[selectedJewelleryIndex];
 
   const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load(
+  textureLoader.load(
     image,
-    function (tex) {
-      createJewelleryMesh(tex, position, scale);
+    function (texture) {
+      if (JEWELLERYMASH) {
+        JEWELLERYMASH.material.map = texture;
+        JEWELLERYMASH.material.needsUpdate = true;
+        JEWELLERYMASH.position.set(...position);
+        JEWELLERYMASH.scale.set(...scale);
+      } else {
+        createJewelleryMesh(texture, position, scale);
+      }
     },
     undefined,
-    function (err) {}
+    function (err) {
+      console.error("Texture loading error:", err);
+    }
   );
 }
 
@@ -34,8 +45,6 @@ function init_threeScene(selectedJewelleryIndex) {
  * @param {*} scale
  */
 function createJewelleryMesh(texture, position, scale) {
-  const threeStuffs = JeelizThreeHelper.init(filterSpecs, detect_callback);
-
   const material = new THREE.MeshBasicMaterial({
     map: texture,
     transparent: true,
@@ -48,15 +57,7 @@ function createJewelleryMesh(texture, position, scale) {
   JEWELLERYMASH.scale.set(...scale);
   JEWELLERYMASH.visible = true;
 
-  FACEMESH = JeelizThreeHelper.create_threejsOccluder(
-    "./models/face/face.json"
-  );
-  FACEMESH.frustumCulled = false;
-  FACEMESH.scale.multiplyScalar(1.1);
-  FACEMESH.position.set(0, 0.7, -0.75);
-  FACEMESH.renderOrder = 100000;
-
-  GROUPOBJ3D.add(JEWELLERYMASH, FACEMESH);
+  GROUPOBJ3D.add(JEWELLERYMASH);
   addDragEventListener(GROUPOBJ3D);
   threeStuffs.faceObject.add(GROUPOBJ3D);
 
@@ -78,16 +79,15 @@ function init_faceFilter(videoSettings) {
   JEELIZFACEFILTER.init({
     canvasId: "jeeFaceFilterCanvas",
     NNCPath: "../../../neuralNets/",
-    videoSettings: videoSettings,
+    videoSettings,
     callbackReady: function (errCode, spec) {
       if (errCode) {
-        console.log("AN ERROR HAPPENED. SORRY BRO :( . ERR =", errCode);
+        console.log(errCode);
         return;
       }
 
-      console.log("INFO: JEELIZFACEFILTER IS READY");
-      filterSpecs = spec;
-      init_threeScene(0);
+      threeStuffs = JeelizThreeHelper.init(spec, detect_callback);
+      init_threeScene(selectedJewelleryIndex);
     },
 
     callbackTrack: function (detectState) {
