@@ -90,7 +90,6 @@
       container.classList.add("containerStyles");
 
       necklaceArray.forEach((necklace, index) => {
-        // Create card element
         const card = document.createElement("div");
         card.classList.add("card");
         const imgContainer = document.createElement("div");
@@ -102,7 +101,6 @@
         const description = document.createElement("span");
         description.textContent = necklace.description;
 
-        // Create image element
         const img = document.createElement("img");
         img.src = necklace.image;
         img.alt = `Necklace ${index + 1}`;
@@ -113,12 +111,10 @@
         card.appendChild(imgContainer);
         imgContainer.appendChild(img);
 
-        // Add click event to change necklace in Three.js scene
         card.addEventListener("click", () => {
           handleTryOn(necklace, index);
         });
 
-        // Append card to container
         container.appendChild(card);
       });
     };
