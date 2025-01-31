@@ -75,7 +75,7 @@ function main() {
 function init_faceFilter(videoSettings) {
   JEELIZFACEFILTER.init({
     canvasId: "jeeFaceFilterCanvas",
-    NNCPath: "../../../neuralNets/",
+    NNCPath: "neuralNets/NN_DEFAULT.JSON",
     videoSettings,
     callbackReady: function (errCode, spec) {
       if (errCode) {
