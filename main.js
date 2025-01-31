@@ -2,8 +2,6 @@ let THREECAMERA = null;
 let GROUPOBJ3D = null;
 let JEWELLERYMASH = null;
 let FACEMESH = null;
-
-let filterSpecs = null;
 let threeStuffs = null;
 let selectedJewelleryIndex = 0;
 
@@ -58,7 +56,7 @@ function createJewelleryMesh(texture, position, scale) {
   JEWELLERYMASH.visible = true;
 
   GROUPOBJ3D.add(JEWELLERYMASH);
-  threeStuffs.faceObject.add(GROUPOBJ3D);
+  threeStuffs?.faceObject.add(GROUPOBJ3D);
 
   THREECAMERA = JeelizThreeHelper.create_camera();
 }
