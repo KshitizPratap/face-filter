@@ -58,7 +58,6 @@ function createJewelleryMesh(texture, position, scale) {
   JEWELLERYMASH.visible = true;
 
   GROUPOBJ3D.add(JEWELLERYMASH);
-  addDragEventListener(GROUPOBJ3D);
   threeStuffs.faceObject.add(GROUPOBJ3D);
 
   THREECAMERA = JeelizThreeHelper.create_camera();
