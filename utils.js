@@ -70,3 +70,79 @@ const necklaceArray = [
     description: "Opal charm, 3.6g, 17-inch snake chain",
   },
 ];
+
+const earringsArray = [
+  {
+    position: [-0.65, -0.05, 0],
+    scale: [0.175, 0.2, 0.2],
+    image: "./models/earrings/earrings_6.png",
+    label: "Serenity Chain",
+    description: "Stainless steel, 5.2g, water-resistant, 16''",
+  },
+  {
+    position: [-0.65, -0.05, 0],
+    scale: [0.12, 0.2, 0.2],
+    image: "./models/earrings/earrings_12.png",
+    label: "Eclipse Shine",
+    description: "Black titanium, 4g, 16-inch chain",
+  },
+  {
+    position: [-0.66, -0.05, 0],
+    scale: [0.175, 0.2, 0.2],
+    image: "./models/earrings/earrings_8.png",
+    label: "Starlit Whisper",
+    description: "White gold, 5g, 18-inch box chain",
+  },
+  {
+    position: [-0.65, -0.045, 0],
+    scale: [0.175, 0.2, 0.2],
+    image: "./models/earrings/earrings_10.png",
+    label: "Mystic Orbit",
+    description: "Platinum-plated, 5.5g, 18-inch link chain",
+  },
+  {
+    position: [-0.66, -0.125, 0],
+    scale: [0.25, 0.45, 0.4],
+    image: "./models/earrings/earrings_1.png",
+    label: "Luna Glow",
+    description: "18K gold-plated, 5g, adjustable 16-18''",
+  },
+  {
+    position: [-0.66, -0.125, 0],
+    scale: [0.15, 0.45, 0.4],
+    image: "./models/earrings/earrings_2.png",
+    label: "Luna Glow",
+    description: "18K gold-plated, 5g, adjustable 16-18''",
+  },
+  {
+    position: [-0.66, -0.125, 0],
+    scale: [0.2, 0.45, 0.4],
+    image: "./models/earrings/earrings_3.png",
+    label: "Luna Glow",
+    description: "18K gold-plated, 5g, adjustable 16-18''",
+  },
+
+  {
+    position: [-0.66, -0.125, 0],
+    scale: [0.2, 0.45, 0.4],
+    image: "./models/earrings/earrings_7.png",
+    label: "Golden Ember",
+    description: "14K gold, 3.8g, 15-inch choker",
+  },
+
+  {
+    position: [-0.66, -0.125, 0],
+    scale: [0.25, 0.45, 0.4],
+    image: "./models/earrings/earrings_9.png",
+    label: "Aurora Gem",
+    description: "Sapphire pendant, 4.2g, 17-inch chain",
+  },
+
+  {
+    position: [-0.67, -0.125, 0],
+    scale: [0.25, 0.45, 0.4],
+    image: "./models/earrings/earrings_11.png",
+    label: "Eclipse Shine",
+    description: "Black titanium, 4g, 16-inch chain",
+  },
+];

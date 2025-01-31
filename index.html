@@ -55,19 +55,26 @@
   <body>
     <header>
       <img src="./public/logo.png" class="logo" alt="logo" loading="lazy" />
-      <h2 class="main-heading">Necklace Virtual Try-on</h2>
+      <h2 class="main-heading">Virtual Try-on</h2>
     </header>
     <div class="loader"><p></p></div>
-    <div class="container"></div>
-    <div class="canvasContainer removeCanvasContainer">
-      <h3></h3>
-      <span></span>
-      <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
+    <div class="mainContainer">
+      <h2>Necklace Virtual Try-on</h2>
+      <div class="container" id="necklace"></div>
+      <h2>Earrings Virtual Try-on</h2>
+      <div class="container" id="earrings"></div>
+      <div class="canvasContainer removeCanvasContainer">
+        <h3></h3>
+        <span></span>
+        <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
+      </div>
     </div>
   </body>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      const mainContainer = document.querySelector(".mainContainer");
+      mainContainer.classList.add("displayNone");
       const loader = document.querySelector(".loader");
       const loaderMsg = document.querySelector(".loader p");
       loaderMsg.textContent = "Loading please wait";
@@ -80,54 +87,56 @@
       }, 0.5 * 1000);
 
       setTimeout(() => {
-        appendNecklaceCards();
+        mainContainer.classList.remove("displayNone");
+        appendCards("necklace", necklaceArray);
+        appendCards("earrings", earringsArray);
         document.querySelector("body").removeChild(loader);
       }, 6 * 1000);
     });
 
-    const appendNecklaceCards = () => {
-      const container = document.querySelector(".container");
+    const appendCards = (id, cardsArray) => {
+      const container = document.querySelector(`#${id}`);
       container.classList.add("containerStyles");
 
-      necklaceArray.forEach((necklace, index) => {
-        const card = document.createElement("div");
-        card.classList.add("card");
+      cardsArray.forEach((card, index) => {
+        const newCard = document.createElement("div");
+        newCard.classList.add("card");
         const imgContainer = document.createElement("div");
         imgContainer.classList.add("imgContainer");
 
         const heading = document.createElement("h4");
-        heading.textContent = necklace.label;
+        heading.textContent = card.label;
 
         const description = document.createElement("span");
-        description.textContent = necklace.description;
+        description.textContent = card.description;
 
         const img = document.createElement("img");
-        img.src = necklace.image;
-        img.alt = `Necklace ${index + 1}`;
+        img.src = card.image;
+        img.alt = `Jewellery Photo`;
         img.loading = "lazy";
 
-        card.appendChild(heading);
-        card.appendChild(description);
-        card.appendChild(imgContainer);
+        newCard.appendChild(heading);
+        newCard.appendChild(description);
+        newCard.appendChild(imgContainer);
         imgContainer.appendChild(img);
 
-        card.addEventListener("click", () => {
-          handleTryOn(necklace, index);
+        newCard.addEventListener("click", () => {
+          handleTryOn(id, card, index);
         });
 
-        container.appendChild(card);
+        container.appendChild(newCard);
       });
     };
 
-    const handleTryOn = (necklace, index) => {
+    const handleTryOn = (id, card, index) => {
       const canvasContainer = document.querySelector(".canvasContainer");
       canvasContainer.classList.remove("removeCanvasContainer");
 
       const tryOnHeading = document.querySelector(".canvasContainer h3");
-      tryOnHeading.textContent = necklace.label;
+      tryOnHeading.textContent = card.label;
 
       const tryOnDescription = document.querySelector(".canvasContainer span");
-      tryOnDescription.textContent = necklace.description;
+      tryOnDescription.textContent = card.description;
 
       const backdrop = document.createElement("div");
       backdrop.classList.add("backdrop");
@@ -138,7 +147,7 @@
 
       document.querySelector("body").prepend(backdrop);
 
-      init_threeScene(index);
+      init_tryOn(id, index);
     };
   </script>
 </html>

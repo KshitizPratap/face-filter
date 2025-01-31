@@ -46,6 +46,23 @@ header .main-heading {
   font-weight: normal;
 }
 
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 5rem;
+}
+
+.mainContainer h2 {
+  font-family: Urbanist;
+  color: #266d9f;
+  font-size: 28px;
+  font-weight: normal;
+}
+
+.displayNone {
+  display: none;
+}
+
 .loader {
   height: calc(100vh - 70px);
   display: flex;
@@ -59,11 +76,10 @@ header .main-heading {
 }
 
 .containerStyles {
-  height: calc(100vh - 100px);
+  height: 375px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 0 5rem;
+  padding: 2rem 3.5rem;
   overflow-x: auto;
 }
 
@@ -76,7 +92,7 @@ header .main-heading {
   height: 280px;
   width: 200px;
   border-radius: 10px;
-  box-shadow: -1rem 0 3rem #b5b5b5;
+  box-shadow: -0.5rem 0 1rem #b5b5b5;
   background-color: #fff6ed;
   transition: 0.4s ease-out;
   position: relative;
@@ -116,6 +132,8 @@ header .main-heading {
 .container .card img {
   align-self: center;
   width: 100%;
+  max-height: 150px;
+  object-fit: contain;
 }
 
 .backdrop {
