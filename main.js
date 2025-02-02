@@ -5,8 +5,12 @@ let EARRINGMASHES = [null, null];
 let FACEMESH = null;
 let threeStuffs = null;
 let selectedJewelleryIndex = 0;
-
 let position = [];
+let earringPosition = {
+  position1: [],
+  position2: [],
+  distance: 0,
+};
 
 function detect_callback(isDetected) {
   if (isDetected) {
@@ -21,15 +25,21 @@ function detect_callback(isDetected) {
  */
 const init_tryOn = (jewellery_type) => {
   positionController(jewellery_type);
+  position = [];
+  earringPosition = {
+    position1: [],
+    position2: [],
+    distance: 0,
+  };
 
   switch (jewellery_type) {
     case "necklace":
       removeEarrings();
-      tryOn_necklace(selectedJewelleryIndex);
+      tryOn_necklace();
       break;
     case "earrings":
       removeNecklace();
-      tryOn_earrings(selectedJewelleryIndex);
+      tryOn_earrings();
       break;
     default:
       console.error("Invalid jewellery type:", jewellery_type);
@@ -81,8 +91,16 @@ function tryOn_earrings() {
   const { position, scale, image } = earringsArray[selectedJewelleryIndex];
   const second_position = [-position[0], ...position.slice(1)];
 
-  loadJewelleryTexture(image, position, scale, "earrings", 0);
-  loadJewelleryTexture(image, second_position, scale, "earrings", 1);
+  if (!earringPosition.position1.length) {
+    earringPosition = {
+      position1: [...position],
+      position2: [...second_position],
+      distance: 2 * Math.abs(position[0]),
+    };
+  }
+
+  loadJewelleryTexture(image, earringPosition.position1, scale, "earrings", 0);
+  loadJewelleryTexture(image, earringPosition.position2, scale, "earrings", 1);
 }
 
 /**
@@ -182,14 +200,34 @@ function createJewelleryMesh(texture, position, scale) {
   return mesh;
 }
 
-function handlerXPosition(e) {
-  position[0] = e.target.value / 1000;
-  init_tryOn("necklace");
+function handleNecklacePosition(e) {
+  const { value, name } = e.target;
+
+  if (name === "position-x") {
+    position[0] = value / 1000;
+  } else {
+    position[1] = -value / 100;
+  }
+  tryOn_necklace();
 }
 
-function handlerYPosition(e) {
-  position[1] = -e.target.value / 100;
-  init_tryOn("necklace");
+function handleEarringsPosition(e) {
+  const { distance, position1, position2 } = earringPosition;
+  const { value, name } = e.target;
+
+  if (name === "position-x") {
+    position1[0] = value / 100;
+    position2[0] = value / 100 - distance;
+  } else if (name === "position-y") {
+    position1[1] = -value / 1000;
+    position2[1] = -value / 1000;
+  } else {
+    earringPosition.distance = value / 100;
+    position1[0] = -earringPosition.distance / 2;
+    position2[0] = earringPosition.distance / 2;
+  }
+
+  tryOn_earrings();
 }
 
 function main() {

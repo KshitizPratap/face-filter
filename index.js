@@ -20,12 +20,24 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 6 * 1000);
 
   document
-    .querySelector("#position-x")
-    .addEventListener("input", handlerXPosition);
+    .querySelector("#necklace-position-x")
+    .addEventListener("input", handleNecklacePosition);
 
   document
-    .querySelector("#position-y")
-    .addEventListener("input", handlerYPosition);
+    .querySelector("#necklace-position-y")
+    .addEventListener("input", handleNecklacePosition);
+
+  document
+    .querySelector("#earrings-position-x")
+    .addEventListener("input", handleEarringsPosition);
+
+  document
+    .querySelector("#earrings-position-y")
+    .addEventListener("input", handleEarringsPosition);
+
+  document
+    .querySelector("#earrings-distance")
+    .addEventListener("input", handleEarringsPosition);
 
   document
     .querySelector(".downloadPhoto")
@@ -122,11 +134,11 @@ function downloadImage() {
 }
 
 function positionController(jewellery_type) {
-  const controlContainer = document.querySelector(".controllerContainer");
-
   if (jewellery_type === "necklace") {
-    controlContainer.style.display = "block";
+    document.querySelector("#earringsControllers").style.display = "none";
+    document.querySelector("#necklaceControllers").style.display = "block";
   } else {
-    controlContainer.style.display = "none";
+    document.querySelector("#earringsControllers").style.display = "block";
+    document.querySelector("#necklaceControllers").style.display = "none";
   }
 }
