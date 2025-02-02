@@ -120,6 +120,7 @@ header .main-heading {
   height: 100%;
   justify-content: center;
   align-items: center;
+  border-radius: 4px;
 }
 
 .container .card h4 {
@@ -168,6 +169,29 @@ header .main-heading {
   font-size: 24px;
 }
 
+.downloadPhoto {
+  width: 150px;
+  height: 36px;
+
+  position: absolute;
+  bottom: 3rem;
+  left: 380px;
+  border: 1px solid #ccc;
+  border-radius: 18px;
+  background-color: #111;
+  color: #eee;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0.5rem;
+}
+
+.downloadPhoto img {
+  height: 70%;
+  border-radius: 50%;
+}
+
 #jeeFaceFilterCanvas {
   height: 550px;
   width: 500px;
@@ -176,7 +200,7 @@ header .main-heading {
 }
 
 .jewelleryDetails {
-  width: 500px;
+  width: 350px;
 }
 
 .canvasContainer .jewelleryImg {
@@ -185,7 +209,7 @@ header .main-heading {
   align-content: center;
   border-radius: 4px;
   width: 100%;
-  height: 250px;
+  height: 285px;
   padding: 1rem;
 }
 
@@ -193,4 +217,69 @@ header .main-heading {
   height: 100%;
   object-fit: contain;
   border-radius: 4px;
+}
+
+.controllerContainer {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.controllerContainer h4 {
+  font-size: 18px;
+}
+
+.controllerContainer .controller {
+  position: relative;
+  width: 100%;
+  margin: 10px 0 30px;
+}
+
+.controllerContainer .range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #266d9f6e;
+  width: 100%;
+  border-radius: 3px;
+  vertical-align: bottom;
+  margin: 0;
+  height: 6px;
+  cursor: pointer;
+  transition: all ease-in 0.25s;
+}
+
+.controllerContainer .range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  border: 0;
+  position: relative;
+  width: 4px;
+  height: 15px;
+  background-color: #266d9f;
+}
+.controllerContainer .range-slider::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  border: 0;
+  position: relative;
+  width: 4px;
+  height: 15px;
+  background-color: #266d9f;
+}
+
+.controllerContainer .range-slider {
+  &:focus {
+    outline: none;
+  }
+
+  &:hover,
+  &:active {
+    &::-webkit-slider-thumb {
+      top: 0px;
+    }
+  }
 }

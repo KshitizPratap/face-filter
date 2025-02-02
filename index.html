@@ -66,6 +66,10 @@
       <h2>Earrings Virtual Try-on</h2>
       <div class="container" id="earrings"></div>
       <div class="canvasContainer removeCanvasContainer">
+        <div class="downloadPhoto">
+          <img src="./public/download.png" />
+          <span>Save Photo</span>
+        </div>
         <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
         <div class="jewelleryDetails">
           <div class="jewelleryLabel">
@@ -73,26 +77,30 @@
             <span></span>
           </div>
           <div class="jewelleryImg"></div>
-          <div class="controller">
+          <div class="controllerContainer">
             <h4>Filter Position</h4>
             <div class="controller">
               <label for="position-x">Move Horizontally</label>
+              <span class="slider-bar"></span>
               <input
                 type="range"
                 name="position-x"
                 id="position-x"
                 min="0"
                 max="200"
+                class="range-slider"
               />
             </div>
+
             <div class="controller">
               <label for="position-y">Move Vertically</label>
               <input
                 type="range"
                 name="position-y"
                 id="position-y"
-                min="75"
-                max="175"
+                min="100"
+                max="150"
+                class="range-slider"
               />
             </div>
           </div>

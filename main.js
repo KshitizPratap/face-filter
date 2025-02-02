@@ -20,6 +20,8 @@ function detect_callback(isDetected) {
  * @param {string} jewellery_type earrings or necklace
  */
 const init_tryOn = (jewellery_type) => {
+  positionController(jewellery_type);
+
   switch (jewellery_type) {
     case "necklace":
       removeEarrings();

@@ -26,6 +26,10 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .querySelector("#position-y")
     .addEventListener("input", handlerYPosition);
+
+  document
+    .querySelector(".downloadPhoto")
+    .addEventListener("click", downloadImage);
 });
 
 const appendCards = (id, cardsArray) => {
@@ -35,8 +39,12 @@ const appendCards = (id, cardsArray) => {
   cardsArray.forEach((card, index) => {
     const newCard = document.createElement("div");
     newCard.classList.add("card");
+
     const imgContainer = document.createElement("div");
     imgContainer.classList.add("imgContainer");
+    if (card.orgImage) {
+      imgContainer.style.backgroundImage = `url("${card.orgImage}")`;
+    }
 
     const heading = document.createElement("h4");
     heading.textContent = card.label;
@@ -97,3 +105,28 @@ const handleTryOn = (id, card, index) => {
   position = [];
   init_tryOn(id);
 };
+
+function downloadImage() {
+  const canvas = document.getElementById("jeeFaceFilterCanvas");
+  const filename = "jewellery-image.png";
+
+  const imageURL = canvas.toDataURL("image/png");
+
+  const downloadLink = document.createElement("a");
+  downloadLink.href = imageURL;
+  downloadLink.download = filename;
+
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+}
+
+function positionController(jewellery_type) {
+  const controlContainer = document.querySelector(".controllerContainer");
+
+  if (jewellery_type === "necklace") {
+    controlContainer.style.display = "block";
+  } else {
+    controlContainer.style.display = "none";
+  }
+}
