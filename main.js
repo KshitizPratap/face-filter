@@ -6,6 +6,8 @@ let FACEMESH = null;
 let threeStuffs = null;
 let selectedJewelleryIndex = 0;
 
+let position = [];
+
 function detect_callback(isDetected) {
   if (isDetected) {
     console.log("INFO in detect_callback(): DETECTED");
@@ -16,9 +18,8 @@ function detect_callback(isDetected) {
 /**
  * First function when any jewellery is selected
  * @param {string} jewellery_type earrings or necklace
- * @param {number} selectedJewelleryIndex index from the card array
  */
-const init_tryOn = (jewellery_type, selectedJewelleryIndex) => {
+const init_tryOn = (jewellery_type) => {
   switch (jewellery_type) {
     case "necklace":
       removeEarrings();
@@ -57,18 +58,24 @@ function removeEarrings() {
 
 /**
  * Necklace specific data destructuring
- * @param {number} selectedJewelleryIndex
  */
-function tryOn_necklace(selectedJewelleryIndex) {
-  const { position, scale, image } = necklaceArray[selectedJewelleryIndex];
+function tryOn_necklace() {
+  const {
+    position: _position,
+    scale,
+    image,
+  } = necklaceArray[selectedJewelleryIndex];
+
+  if (!position.length) {
+    position = [..._position];
+  }
   loadJewelleryTexture(image, position, scale, "necklace");
 }
 
 /**
  * Earrings specific data destructuring
- * @param {number} selectedJewelleryIndex
  */
-function tryOn_earrings(selectedJewelleryIndex) {
+function tryOn_earrings() {
   const { position, scale, image } = earringsArray[selectedJewelleryIndex];
   const second_position = [-position[0], ...position.slice(1)];
 
@@ -89,13 +96,14 @@ function loadJewelleryTexture(image, position, scale, type, index = 0) {
     image,
     function (texture) {
       if (type === "necklace") {
+        const fadedTexture = applyGradientFade(texture);
         if (NECKLACEMASH) {
-          NECKLACEMASH.material.map = texture;
+          NECKLACEMASH.material.map = fadedTexture;
           NECKLACEMASH.material.needsUpdate = true;
           NECKLACEMASH.position.set(...position);
           NECKLACEMASH.scale.set(...scale);
         } else {
-          NECKLACEMASH = createJewelleryMesh(texture, position, scale);
+          NECKLACEMASH = createJewelleryMesh(fadedTexture, position, scale);
         }
       } else if (type === "earrings") {
         if (!EARRINGMASHES[index]) {
@@ -113,6 +121,35 @@ function loadJewelleryTexture(image, position, scale, type, index = 0) {
       console.error("Texture loading error:", err);
     }
   );
+}
+
+/**
+ * Makes the faded effect on the top of the necklace image
+ * @param {*} texture
+ * @returns
+ */
+function applyGradientFade(texture) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const img = texture.image;
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  ctx.drawImage(img, 0, 0);
+
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  gradient.addColorStop(0, "rgba(0, 0, 0, 0)");
+  gradient.addColorStop(0.2, "rgba(0, 0, 0, 1)");
+
+  ctx.globalCompositeOperation = "destination-in";
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Create new texture
+  const newTexture = new THREE.CanvasTexture(canvas);
+  newTexture.needsUpdate = true;
+  return newTexture;
 }
 
 /**
@@ -141,6 +178,16 @@ function createJewelleryMesh(texture, position, scale) {
   THREECAMERA = JeelizThreeHelper.create_camera();
 
   return mesh;
+}
+
+function handlerXPosition(e) {
+  position[0] = e.target.value / 1000;
+  init_tryOn("necklace");
+}
+
+function handlerYPosition(e) {
+  position[1] = -e.target.value / 100;
+  init_tryOn("necklace");
 }
 
 function main() {

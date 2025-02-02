@@ -35,6 +35,8 @@
 
     <script src="./utils.js"></script>
 
+    <script src="./index.js"></script>
+
     <link rel="stylesheet" href="style.css" type="text/css" />
     <style>
       #openMouthInstructions {
@@ -64,90 +66,38 @@
       <h2>Earrings Virtual Try-on</h2>
       <div class="container" id="earrings"></div>
       <div class="canvasContainer removeCanvasContainer">
-        <h3></h3>
-        <span></span>
         <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
+        <div class="jewelleryDetails">
+          <div class="jewelleryLabel">
+            <h3></h3>
+            <span></span>
+          </div>
+          <div class="jewelleryImg"></div>
+          <div class="controller">
+            <h4>Filter Position</h4>
+            <div class="controller">
+              <label for="position-x">Move Horizontally</label>
+              <input
+                type="range"
+                name="position-x"
+                id="position-x"
+                min="0"
+                max="200"
+              />
+            </div>
+            <div class="controller">
+              <label for="position-y">Move Vertically</label>
+              <input
+                type="range"
+                name="position-y"
+                id="position-y"
+                min="75"
+                max="175"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const mainContainer = document.querySelector(".mainContainer");
-      mainContainer.classList.add("displayNone");
-      const loader = document.querySelector(".loader");
-      const loaderMsg = document.querySelector(".loader p");
-      loaderMsg.textContent = "Loading please wait";
-
-      setInterval(() => {
-        loaderMsg.textContent += ".";
-        if (loaderMsg.textContent.split(".").length === 5) {
-          loaderMsg.textContent = "Loading please wait";
-        }
-      }, 0.5 * 1000);
-
-      setTimeout(() => {
-        mainContainer.classList.remove("displayNone");
-        appendCards("necklace", necklaceArray);
-        appendCards("earrings", earringsArray);
-        document.querySelector("body").removeChild(loader);
-      }, 6 * 1000);
-    });
-
-    const appendCards = (id, cardsArray) => {
-      const container = document.querySelector(`#${id}`);
-      container.classList.add("containerStyles");
-
-      cardsArray.forEach((card, index) => {
-        const newCard = document.createElement("div");
-        newCard.classList.add("card");
-        const imgContainer = document.createElement("div");
-        imgContainer.classList.add("imgContainer");
-
-        const heading = document.createElement("h4");
-        heading.textContent = card.label;
-
-        const description = document.createElement("span");
-        description.textContent = card.description;
-
-        const img = document.createElement("img");
-        img.src = card.image;
-        img.alt = `Jewellery Photo`;
-        img.loading = "lazy";
-
-        newCard.appendChild(heading);
-        newCard.appendChild(description);
-        newCard.appendChild(imgContainer);
-        imgContainer.appendChild(img);
-
-        newCard.addEventListener("click", () => {
-          handleTryOn(id, card, index);
-        });
-
-        container.appendChild(newCard);
-      });
-    };
-
-    const handleTryOn = (id, card, index) => {
-      const canvasContainer = document.querySelector(".canvasContainer");
-      canvasContainer.classList.remove("removeCanvasContainer");
-
-      const tryOnHeading = document.querySelector(".canvasContainer h3");
-      tryOnHeading.textContent = card.label;
-
-      const tryOnDescription = document.querySelector(".canvasContainer span");
-      tryOnDescription.textContent = card.description;
-
-      const backdrop = document.createElement("div");
-      backdrop.classList.add("backdrop");
-      backdrop.addEventListener("click", () => {
-        canvasContainer.classList.add("removeCanvasContainer");
-        document.querySelector("body").removeChild(backdrop);
-      });
-
-      document.querySelector("body").prepend(backdrop);
-
-      init_tryOn(id, index);
-    };
-  </script>
 </html>
