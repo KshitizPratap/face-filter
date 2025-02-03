@@ -42,6 +42,14 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .querySelector(".downloadPhoto")
     .addEventListener("click", downloadImage);
+
+  document
+    .querySelector("#left-arrow")
+    .addEventListener("click", () => nextPrevJewelleryHandler("next"));
+
+  document
+    .querySelector("#right-arrow")
+    .addEventListener("click", () => nextPrevJewelleryHandler("prev"));
 });
 
 const appendCards = (id, cardsArray) => {
@@ -104,14 +112,17 @@ const handleTryOn = (id, card, index) => {
   }
   jewelleryImgContainer.appendChild(img);
 
-  const backdrop = document.createElement("div");
-  backdrop.classList.add("backdrop");
-  backdrop.addEventListener("click", () => {
-    canvasContainer.classList.add("removeCanvasContainer");
-    document.querySelector("body").removeChild(backdrop);
-  });
+  const hasBackdrop = !!document.querySelector(".backdrop");
+  if (!hasBackdrop) {
+    const backdrop = document.createElement("div");
+    backdrop.classList.add("backdrop");
+    backdrop.addEventListener("click", () => {
+      canvasContainer.classList.add("removeCanvasContainer");
+      document.querySelector("body").removeChild(backdrop);
+    });
 
-  document.querySelector("body").prepend(backdrop);
+    document.querySelector("body").prepend(backdrop);
+  }
 
   selectedJewelleryIndex = index;
   position = [];
@@ -141,4 +152,53 @@ function positionController(jewellery_type) {
     document.querySelector("#earringsControllers").style.display = "block";
     document.querySelector("#necklaceControllers").style.display = "none";
   }
+}
+
+function handleNecklacePosition(e) {
+  const { value, name } = e.target;
+
+  if (name === "position-x") {
+    position[0] = value / 1000;
+  } else {
+    position[1] = -value / 100;
+  }
+  tryOn_necklace();
+}
+
+function handleEarringsPosition(e) {
+  const { distance, position1, position2 } = earringPosition;
+  const { value, name } = e.target;
+
+  if (name === "position-x") {
+    position1[0] = value / 100;
+    position2[0] = value / 100 - distance;
+  } else if (name === "position-y") {
+    position1[1] = -value / 1000;
+    position2[1] = -value / 1000;
+  } else {
+    earringPosition.distance = value / 100;
+    position1[0] = -earringPosition.distance / 2;
+    position2[0] = earringPosition.distance / 2;
+  }
+
+  tryOn_earrings();
+}
+
+function nextPrevJewelleryHandler(action) {
+  const jewelleryArray =
+    jewellery_type === "necklace" ? necklaceArray : earringsArray;
+  const length = jewelleryArray.length;
+
+  if (action === "next") {
+    selectedJewelleryIndex = (selectedJewelleryIndex + 1) % length;
+  } else {
+    selectedJewelleryIndex =
+      selectedJewelleryIndex - 1 < 0 ? length - 1 : selectedJewelleryIndex - 1;
+  }
+
+  handleTryOn(
+    jewellery_type,
+    jewelleryArray[selectedJewelleryIndex],
+    selectedJewelleryIndex
+  );
 }

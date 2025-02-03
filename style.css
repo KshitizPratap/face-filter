@@ -157,12 +157,12 @@ header .main-heading {
   z-index: 10;
   top: calc(50vh - 307px);
   left: calc(50vw - 500px);
-  padding: 2rem 3rem;
+  padding: 2rem 1rem;
   border-radius: 8px;
   background-color: #fff6ed;
   display: flex;
   flex-direction: row;
-  gap: 3rem;
+  align-items: center;
 }
 
 .canvasContainer h3 {
@@ -172,13 +172,12 @@ header .main-heading {
 .downloadPhoto {
   width: 150px;
   height: 36px;
-
   position: absolute;
   bottom: 3rem;
   left: 380px;
   border: 1px solid #ccc;
   border-radius: 18px;
-  background-color: #111;
+  background-color: #1118;
   color: #eee;
   cursor: pointer;
   display: flex;
@@ -192,15 +191,24 @@ header .main-heading {
   border-radius: 50%;
 }
 
+.arrow {
+  height: 35px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
 #jeeFaceFilterCanvas {
   height: 575px;
   width: 500px;
   align-self: center;
   border-radius: 8px;
+  margin: 0 1.25rem;
 }
 
 .jewelleryDetails {
   width: 350px;
+  align-self: flex-start;
+  margin: 0 1.25rem;
 }
 
 .canvasContainer .jewelleryImg {

@@ -38,20 +38,6 @@
     <script src="./index.js"></script>
 
     <link rel="stylesheet" href="style.css" type="text/css" />
-    <style>
-      #openMouthInstructions {
-        position: absolute;
-        top: 40px;
-        left: 50%;
-        transform: translate(-50%);
-        z-index: 1000;
-        font-size: 20pt;
-        text-shadow: 0 0 1px black;
-        font-family: Helvetica Neu, Arial, sans-serif;
-        color: white;
-        display: none;
-      }
-    </style>
   </head>
 
   <body>
@@ -66,10 +52,19 @@
       <h2>Earrings Virtual Try-on</h2>
       <div class="container" id="earrings"></div>
       <div class="canvasContainer removeCanvasContainer">
+        <img
+          src="./public/left-arrow.png"
+          alt=""
+          class="arrow"
+          id="left-arrow"
+        />
         <div class="downloadPhoto">
           <img src="./public/download.png" />
           <span>Save Photo</span>
         </div>
+        <!-- <button class="compare">
+          Compare
+        </button> -->
         <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
         <div class="jewelleryDetails">
           <div class="jewelleryLabel">
@@ -144,6 +139,12 @@
             </div>
           </div>
         </div>
+        <img
+          src="./public/right-arrow.png"
+          alt=""
+          class="arrow"
+          id="right-arrow"
+        />
       </div>
     </div>
   </body>

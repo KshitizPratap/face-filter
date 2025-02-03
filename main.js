@@ -5,6 +5,7 @@ let EARRINGMASHES = [null, null];
 let FACEMESH = null;
 let threeStuffs = null;
 let selectedJewelleryIndex = 0;
+let jewellery_type = "";
 let position = [];
 let earringPosition = {
   position1: [],
@@ -21,16 +22,11 @@ function detect_callback(isDetected) {
 }
 /**
  * First function when any jewellery is selected
- * @param {string} jewellery_type earrings or necklace
+ * @param {string} j_type earrings or necklace
  */
-const init_tryOn = (jewellery_type) => {
+const init_tryOn = (j_type) => {
+  jewellery_type = j_type;
   positionController(jewellery_type);
-  position = [];
-  earringPosition = {
-    position1: [],
-    position2: [],
-    distance: 0,
-  };
 
   switch (jewellery_type) {
     case "necklace":
@@ -198,36 +194,6 @@ function createJewelleryMesh(texture, position, scale) {
   THREECAMERA = JeelizThreeHelper.create_camera();
 
   return mesh;
-}
-
-function handleNecklacePosition(e) {
-  const { value, name } = e.target;
-
-  if (name === "position-x") {
-    position[0] = value / 1000;
-  } else {
-    position[1] = -value / 100;
-  }
-  tryOn_necklace();
-}
-
-function handleEarringsPosition(e) {
-  const { distance, position1, position2 } = earringPosition;
-  const { value, name } = e.target;
-
-  if (name === "position-x") {
-    position1[0] = value / 100;
-    position2[0] = value / 100 - distance;
-  } else if (name === "position-y") {
-    position1[1] = -value / 1000;
-    position2[1] = -value / 1000;
-  } else {
-    earringPosition.distance = value / 100;
-    position1[0] = -earringPosition.distance / 2;
-    position2[0] = earringPosition.distance / 2;
-  }
-
-  tryOn_earrings();
 }
 
 function main() {
