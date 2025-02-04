@@ -105,6 +105,9 @@ const handleTryOn = (id, card, index) => {
   tryOnDescription.textContent = card.description;
 
   const jewelleryImgContainer = document.querySelector(".jewelleryImg");
+  if (card.orgImage) {
+    jewelleryImgContainer.style.backgroundImage = `url("${card.orgImage}")`;
+  }
   const img = document.createElement("img");
   img.src = card.orgImage ? card.orgImage : card.image;
   if (jewelleryImgContainer.lastChild) {
