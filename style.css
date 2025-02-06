@@ -254,7 +254,6 @@ header .main-heading {
   vertical-align: bottom;
   margin: 0;
   height: 6px;
-  cursor: pointer;
   transition: all ease-in 0.25s;
 }
 
@@ -267,6 +266,7 @@ header .main-heading {
   width: 4px;
   height: 15px;
   background-color: #266d9f;
+  cursor: pointer;
 }
 .controllerContainer .range-slider::-moz-range-thumb {
   -moz-appearance: none;
@@ -279,15 +279,72 @@ header .main-heading {
   background-color: #266d9f;
 }
 
-.controllerContainer .range-slider {
-  &:focus {
-    outline: none;
-  }
+.comparisonContainer {
+  position: absolute;
+  top: 294px;
+  left: 80px;
+  width: 450px;
+}
 
-  &:hover,
-  &:active {
-    &::-webkit-slider-thumb {
-      top: 0px;
-    }
-  }
+.comparisonContainer .arrowContainer {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: #ddd;
+  top: 150px;
+  left: 200px;
+  border-radius: 25px;
+  padding: 0 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+}
+
+.comparisonContainer .arrowContainer .arrow {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+}
+
+.comparisonContainer .controller {
+  position: relative;
+  width: 100%;
+  margin: 10px 0 30px;
+  height: 100%;
+}
+
+.comparisonContainer .range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  width: 100%;
+  border-radius: 3px;
+  vertical-align: bottom;
+  margin: 0;
+  height: 6px;
+  transition: all ease-in 0.25s;
+}
+
+.comparisonContainer .range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  border: 0;
+  position: relative;
+  width: 3px;
+  height: 575px;
+  background-color: #ddd;
+  cursor: w-resize;
+}
+.comparisonContainer .range-slider::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  border: 0;
+  position: relative;
+  width: 3px;
+  height: 15px;
+  background-color: #ddd;
+  cursor: w-resize;
 }
