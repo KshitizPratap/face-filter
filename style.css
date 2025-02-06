@@ -12,6 +12,9 @@ a {
 a:hover {
   color: blue;
 }
+img {
+  object-fit: contain;
+}
 body {
   overflow: auto;
   overflow-y: auto;
@@ -296,8 +299,8 @@ header .main-heading {
   display: none;
   position: absolute;
   top: 294px;
-  left: 80px;
-  width: 450px;
+  left: 130px;
+  width: 350px;
 }
 
 .comparisonContainer .arrowContainer {
@@ -306,7 +309,7 @@ header .main-heading {
   height: 50px;
   background-color: #ddd;
   top: 150px;
-  left: 200px;
+  left: 150px;
   border-radius: 25px;
   padding: 0 5px;
   display: flex;
@@ -361,4 +364,71 @@ header .main-heading {
   height: 15px;
   background-color: #ddd;
   cursor: w-resize;
+}
+
+.compareJewelleryContainer {
+  display: none;
+  position: absolute;
+  top: 40px;
+  width: 500px;
+  left: 35px;
+  height: 60px;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.compareJewellery {
+  height: 100%;
+  width: 60px;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.compareJewellery img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.selectedJewellery {
+  box-shadow: 0 0 5px 5px #fff;
+  border: 1px solid #fff;
+}
+
+.selectedJewelleryCard {
+  box-shadow: 0 0 5px 2px #266d9f;
+}
+
+.jewellerySelectionContainer {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  height: 575px;
+  flex-wrap: wrap;
+  overflow: auto;
+  padding: 10px;
+}
+
+.jewellerySelectionContainer .card {
+  display: flex;
+  width: 180px;
+  height: 200px;
+  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.jewellerySelectionContainer .card .imgContainer {
+  height: 80%;
+  width: 80%;
+}
+
+.jewellerySelectionContainer .card img {
+  height: 100%;
+  width: 100%;
 }

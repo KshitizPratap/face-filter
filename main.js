@@ -138,7 +138,9 @@ function handleComparison(e) {
     jewelleryConfig[jewellery_type][selectedJewelleryIndex].image,
     function (texture) {
       if (texture) {
-        const newTexture = applyComparisonGradient(texture, cutoff);
+        const newTexture = applyGradientFade(
+          applyComparisonGradient(texture, cutoff)
+        );
         JEWELLERYMESH[0].material.map = newTexture;
         // JEWELLERYMESH[0].position.set(0.5, 0, 0); // Move right
         JEWELLERYMESH[0].material.needsUpdate = true;
@@ -150,24 +152,8 @@ function handleComparison(e) {
     }
   );
 
-  // loader.load(
-  //   jewelleryConfig[jewellery_type][Math.abs(selectedJewelleryIndex - 1)].image,
-  //   function (texture) {
-  //     if (texture) {
-  //       const newTexture = applyComparisonGradient(texture, 1 - cutoff);
-  //       JEWELLERYMESH[1].material.map = newTexture;
-  //       // JEWELLERYMESH[1].position.set(0.5, 0, 0); // Move right
-  //       JEWELLERYMESH[1].material.needsUpdate = true;
-  //     }
-  //   },
-  //   undefined,
-  //   function (err) {
-  //     console.error("Texture loading error:", err);
-  //   }
-  // );
-
   const sliderArrow = document.querySelector(".arrowContainer");
-  sliderArrow.style.left = 200 + (value * 4.5 - 225) + "px";
+  sliderArrow.style.left = 150 + (value * 3.5 - 175) + "px";
 }
 
 function main() {

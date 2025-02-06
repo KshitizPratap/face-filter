@@ -59,15 +59,9 @@
           class="arrow"
           id="left-arrow"
         />
-        <button class="downloadPhoto">
-          <img src="./public/download.png" />
-          <span>Save Photo</span>
-        </button>
-        <button class="compare">
-          <img src="./public/compare.png" />
-          <span>Compare</span>
-        </button>
+
         <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
+
         <div class="jewelleryDetails">
           <div class="jewelleryLabel">
             <h3></h3>
@@ -140,39 +134,54 @@
               />
             </div>
           </div>
-          <div class="comparisonContainer">
-            <div class="arrowContainer">
-              <img
-                src="./public/left-arrow.png"
-                alt=""
-                class="arrow"
-                id="left-arrow"
-              />
-              <img
-                src="./public/right-arrow.png"
-                alt=""
-                class="arrow"
-                id="right-arrow"
-              />
-            </div>
-            <div class="controller">
-              <input
-                type="range"
-                name="compare"
-                id="compare"
-                min="0"
-                max="100"
-                class="range-slider"
-              />
-            </div>
-          </div>
         </div>
+
         <img
           src="./public/right-arrow.png"
           alt=""
           class="arrow"
           id="right-arrow"
         />
+
+        <!-- Absolute Position Elements -->
+        <div class="comparisonContainer">
+          <div class="arrowContainer">
+            <img
+              src="./public/left-arrow.png"
+              alt=""
+              class="arrow"
+              id="left-arrow"
+            />
+            <img
+              src="./public/right-arrow.png"
+              alt=""
+              class="arrow"
+              id="right-arrow"
+            />
+          </div>
+          <div class="controller">
+            <input
+              type="range"
+              name="compare"
+              id="compare"
+              min="0"
+              max="100"
+              class="range-slider"
+            />
+          </div>
+        </div>
+        <button class="downloadPhoto">
+          <img src="./public/download.png" />
+          <span>Save Photo</span>
+        </button>
+        <button class="compare">
+          <img src="./public/compare.png" />
+          <span>Compare</span>
+        </button>
+        <div class="compareJewelleryContainer">
+          <div class="compareJewellery"></div>
+          <div class="compareJewellery"></div>
+        </div>
       </div>
     </div>
   </body>
