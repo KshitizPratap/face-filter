@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setTimeout(() => {
     mainContainer.classList.remove("displayNone");
-    appendCards("necklace", necklaceArray);
-    appendCards("earrings", earringsArray);
+    appendCards("necklace");
+    appendCards("earrings");
     document.querySelector("body").removeChild(loader);
   }, 6 * 1000);
 
@@ -52,7 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", () => nextPrevJewelleryHandler("prev"));
 });
 
-const appendCards = (id, cardsArray) => {
+const appendCards = (id) => {
+  const cardsArray = jewelleryConfig[id];
   const container = document.querySelector(`#${id}`);
   container.classList.add("containerStyles");
 
@@ -188,8 +189,7 @@ function handleEarringsPosition(e) {
 }
 
 function nextPrevJewelleryHandler(action) {
-  const jewelleryArray =
-    jewellery_type === "necklace" ? necklaceArray : earringsArray;
+  const jewelleryArray = [...jewelleryConfig[jewellery_type]];
   const length = jewelleryArray.length;
 
   if (action === "next") {

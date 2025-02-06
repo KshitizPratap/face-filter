@@ -1,8 +1,7 @@
 let THREECAMERA = null;
 let GROUPOBJ3D = null;
-let NECKLACEMASH = null;
-let EARRINGMASHES = [null, null];
 let FACEMESH = null;
+let JEWELLERYMESH = [];
 let threeStuffs = null;
 let selectedJewelleryIndex = 0;
 let jewellery_type = "";
@@ -27,116 +26,80 @@ function detect_callback(isDetected) {
 const init_tryOn = (j_type) => {
   jewellery_type = j_type;
   positionController(jewellery_type);
+  const { position, scale, image } =
+    jewelleryConfig[jewellery_type][selectedJewelleryIndex];
+  const isNecklace = jewellery_type === "necklace";
 
-  switch (jewellery_type) {
-    case "necklace":
-      removeEarrings();
-      tryOn_necklace();
-      break;
-    case "earrings":
-      removeNecklace();
-      tryOn_earrings();
-      break;
-    default:
-      console.error("Invalid jewellery type:", jewellery_type);
-  }
+  const jewelleryTextureConfig = {
+    scales: isNecklace ? [scale] : [scale, scale],
+    images: isNecklace ? [image] : [image, image],
+    positions: isNecklace
+      ? [position]
+      : [position, [-position[0], ...position.slice(1)]],
+  };
+
+  loadJewelleryTexture({ ...jewelleryTextureConfig });
 };
 
 /**
- * Function to remove necklace if earrings are selected
+ * Load multiple textures and apply them to a single jewellery mesh.
+ * @param {Array} images - Array of image URLs.
+ * @param {Array} positions - Array of positions for each image.
+ * @param {Array} scales - Array of scales for each image.
  */
-function removeNecklace() {
-  if (NECKLACEMASH) {
-    GROUPOBJ3D.remove(NECKLACEMASH);
-    NECKLACEMASH = null;
-  }
-}
+function loadJewelleryTexture({ images, positions, scales }) {
+  const loader = new THREE.TextureLoader();
+  const materials = [];
 
-/**
- * Function to remove earrings if necklace is selected
- */
-function removeEarrings() {
-  EARRINGMASHES.forEach((mesh, index) => {
-    if (mesh) {
-      GROUPOBJ3D.remove(mesh);
-      EARRINGMASHES[index] = null;
-    }
-  });
-}
-
-/**
- * Necklace specific data destructuring
- */
-function tryOn_necklace() {
-  const {
-    position: _position,
-    scale,
-    image,
-  } = necklaceArray[selectedJewelleryIndex];
-
-  if (!position.length) {
-    position = [..._position];
-  }
-  loadJewelleryTexture(image, position, scale, "necklace");
-}
-
-/**
- * Earrings specific data destructuring
- */
-function tryOn_earrings() {
-  const { position, scale, image } = earringsArray[selectedJewelleryIndex];
-  const second_position = [-position[0], ...position.slice(1)];
-
-  if (!earringPosition.position1.length) {
-    earringPosition = {
-      position1: [...position],
-      position2: [...second_position],
-      distance: 2 * Math.abs(position[0]),
-    };
-  }
-
-  loadJewelleryTexture(image, earringPosition.position1, scale, "earrings", 0);
-  loadJewelleryTexture(image, earringPosition.position2, scale, "earrings", 1);
-}
-
-/**
- * Load texture and apply it to jewellery mesh
- * @param {string} image - Image URL of the jewellery
- * @param {Array} position - Position array [x, y, z]
- * @param {Array} scale - Scale array [x, y, z]
- * @param {string} type - Jewellery type ("necklace" or "earrings")
- * @param {number} [index] - Used for earrings to determine left/right earring
- */
-function loadJewelleryTexture(image, position, scale, type, index = 0) {
-  new THREE.TextureLoader().load(
-    image,
-    function (texture) {
-      if (type === "necklace") {
-        const fadedTexture = applyGradientFade(texture);
-        if (NECKLACEMASH) {
-          NECKLACEMASH.material.map = fadedTexture;
-          NECKLACEMASH.material.needsUpdate = true;
-          NECKLACEMASH.position.set(...position);
-          NECKLACEMASH.scale.set(...scale);
-        } else {
-          NECKLACEMASH = createJewelleryMesh(fadedTexture, position, scale);
+  images.forEach((image, index) => {
+    loader.load(
+      image,
+      function (texture) {
+        if (jewellery_type === "necklace") {
+          texture = applyGradientFade(texture);
         }
-      } else if (type === "earrings") {
-        if (!EARRINGMASHES[index]) {
-          EARRINGMASHES[index] = createJewelleryMesh(texture, position, scale);
-        } else {
-          EARRINGMASHES[index].material.map = texture;
-          EARRINGMASHES[index].material.needsUpdate = true;
-          EARRINGMASHES[index].position.set(...position);
-          EARRINGMASHES[index].scale.set(...scale);
+
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true,
+        });
+        materials.push(material);
+
+        if (index + 1 === images.length) {
+          if (JEWELLERYMESH.length === 0) {
+            createJewelleryMesh(materials, positions, scales);
+          } else if (JEWELLERYMESH.length === 1) {
+            if (jewellery_type === "necklace") {
+              JEWELLERYMESH[0].material.map = texture;
+              JEWELLERYMESH[0].material.needsUpdate = true;
+              JEWELLERYMESH[0].position.set(...positions[0]);
+              JEWELLERYMESH[0].scale.set(...scales[0]);
+            } else if (jewellery_type === "earrings") {
+              GROUPOBJ3D.remove(JEWELLERYMESH[0]);
+              createJewelleryMesh(materials, positions, scales);
+            }
+          } else if (JEWELLERYMESH.length === 2) {
+            if (jewellery_type === "necklace") {
+              GROUPOBJ3D.remove(JEWELLERYMESH[0]);
+              GROUPOBJ3D.remove(JEWELLERYMESH[1]);
+              createJewelleryMesh(materials, positions, scales);
+            } else if (jewellery_type === "earrings") {
+              JEWELLERYMESH.forEach((mesh, index) => {
+                mesh.material.map = texture;
+                mesh.material.needsUpdate = true;
+                mesh.position.set(...positions[index]);
+                mesh.scale.set(...scales[index]);
+              });
+            }
+          }
         }
+      },
+      undefined,
+      function (err) {
+        console.error("Texture loading error:", err);
       }
-    },
-    undefined,
-    function (err) {
-      console.error("Texture loading error:", err);
-    }
-  );
+    );
+  });
 }
 
 /**
@@ -169,31 +132,28 @@ function applyGradientFade(texture) {
 }
 
 /**
- * Create a mesh for jewellery
- * @param {THREE.Texture} texture - The loaded texture
- * @param {Array} position - Position array [x, y, z]
- * @param {Array} scale - Scale array [x, y, z]
- * @returns {THREE.Mesh} - Created mesh
+ * Create a mesh for jewellery with multiple images.
+ * @param {Array} materials - Array of THREE.Material instances.
+ * @param {Array} positions - Array of positions for each texture.
+ * @param {Array} scales - Array of scales for each texture.
  */
-function createJewelleryMesh(texture, position, scale) {
-  const material = new THREE.MeshBasicMaterial({
-    map: texture,
-    transparent: true,
+function createJewelleryMesh(materials, positions, scales) {
+  const geometry = new THREE.PlaneGeometry(1, 1);
+
+  JEWELLERYMESH = materials.map((material, index) => {
+    const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.position.set(...positions[index]);
+    mesh.scale.set(...scales[index]);
+    mesh.visible = true;
+
+    GROUPOBJ3D.add(mesh);
+    THREECAMERA = JeelizThreeHelper.create_camera();
+
+    return mesh;
   });
 
-  const geometry = new THREE.PlaneGeometry(1, 1);
-  const mesh = new THREE.Mesh(geometry, material);
-
-  mesh.position.set(...position);
-  mesh.scale.set(...scale);
-  mesh.visible = true;
-
-  GROUPOBJ3D.add(mesh);
   threeStuffs?.faceObject.add(GROUPOBJ3D);
-
-  THREECAMERA = JeelizThreeHelper.create_camera();
-
-  return mesh;
 }
 
 function main() {
