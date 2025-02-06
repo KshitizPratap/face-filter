@@ -40,8 +40,14 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("input", handleEarringsPosition);
 
   document
+    .querySelector("#compare")
+    .addEventListener("input", handleComparison);
+
+  document
     .querySelector(".downloadPhoto")
     .addEventListener("click", downloadImage);
+
+  document.querySelector(".compare").addEventListener("click", init_comparison);
 
   document
     .querySelector("#left-arrow")

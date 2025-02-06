@@ -103,35 +103,6 @@ function loadJewelleryTexture({ images, positions, scales }) {
 }
 
 /**
- * Makes the faded effect on the top of the necklace image
- * @param {*} texture
- * @returns
- */
-function applyGradientFade(texture) {
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-
-  const img = texture.image;
-  canvas.width = img.width;
-  canvas.height = img.height;
-
-  ctx.drawImage(img, 0, 0);
-
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, "rgba(0, 0, 0, 0)");
-  gradient.addColorStop(0.2, "rgba(0, 0, 0, 1)");
-
-  ctx.globalCompositeOperation = "destination-in";
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Create new texture
-  const newTexture = new THREE.CanvasTexture(canvas);
-  newTexture.needsUpdate = true;
-  return newTexture;
-}
-
-/**
  * Create a mesh for jewellery with multiple images.
  * @param {Array} materials - Array of THREE.Material instances.
  * @param {Array} positions - Array of positions for each texture.
@@ -154,6 +125,49 @@ function createJewelleryMesh(materials, positions, scales) {
   });
 
   threeStuffs?.faceObject.add(GROUPOBJ3D);
+}
+
+function handleComparison(e) {
+  const { value } = e.target;
+  const cutoff = value / 100;
+
+  console.log("[]", { JEWELLERYMESH });
+
+  const loader = new THREE.TextureLoader();
+  loader.load(
+    jewelleryConfig[jewellery_type][selectedJewelleryIndex].image,
+    function (texture) {
+      if (texture) {
+        const newTexture = applyComparisonGradient(texture, cutoff);
+        JEWELLERYMESH[0].material.map = newTexture;
+        // JEWELLERYMESH[0].position.set(0.5, 0, 0); // Move right
+        JEWELLERYMESH[0].material.needsUpdate = true;
+      }
+    },
+    undefined,
+    function (err) {
+      console.error("Texture loading error:", err);
+    }
+  );
+
+  // loader.load(
+  //   jewelleryConfig[jewellery_type][Math.abs(selectedJewelleryIndex - 1)].image,
+  //   function (texture) {
+  //     if (texture) {
+  //       const newTexture = applyComparisonGradient(texture, 1 - cutoff);
+  //       JEWELLERYMESH[1].material.map = newTexture;
+  //       // JEWELLERYMESH[1].position.set(0.5, 0, 0); // Move right
+  //       JEWELLERYMESH[1].material.needsUpdate = true;
+  //     }
+  //   },
+  //   undefined,
+  //   function (err) {
+  //     console.error("Texture loading error:", err);
+  //   }
+  // );
+
+  const sliderArrow = document.querySelector(".arrowContainer");
+  sliderArrow.style.left = 200 + (value * 4.5 - 225) + "px";
 }
 
 function main() {
