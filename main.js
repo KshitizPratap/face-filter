@@ -23,9 +23,12 @@ function detect_callback(isDetected) {
  * First function when any jewellery is selected
  * @param {string} j_type earrings or necklace
  */
-const init_tryOn = (j_type) => {
-  jewellery_type = j_type;
-  positionController(jewellery_type);
+const init_tryOn = () => {
+  THREECAMERA = JeelizThreeHelper.create_camera();
+
+  if (!jewellery_type) {
+    return;
+  }
   const { position, scale, image } =
     jewelleryConfig[jewellery_type][selectedJewelleryIndex];
   const isNecklace = jewellery_type === "necklace";
@@ -38,6 +41,7 @@ const init_tryOn = (j_type) => {
       : [position, [-position[0], ...position.slice(1)]],
   };
 
+  positionController(jewellery_type);
   loadJewelleryTexture({ ...jewelleryTextureConfig });
 };
 

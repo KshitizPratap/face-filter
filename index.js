@@ -100,6 +100,7 @@ const appendCards = (id) => {
 const handleTryOn = (id, card, index) => {
   const canvasContainer = document.querySelector(".canvasContainer");
   canvasContainer.classList.remove("removeCanvasContainer");
+  jewellery_type = id;
 
   const tryOnHeading = document.querySelector(
     ".canvasContainer .jewelleryDetails .jewelleryLabel h3"
@@ -132,6 +133,13 @@ const handleTryOn = (id, card, index) => {
     });
 
     document.querySelector("body").prepend(backdrop);
+  }
+
+  const compareButton = document.querySelector("button.compare");
+  if (jewellery_type === "necklace") {
+    compareButton.style.display = "flex";
+  } else {
+    compareButton.style.display = "none";
   }
 
   selectedJewelleryIndex = index;
