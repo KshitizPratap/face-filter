@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     appendCards("necklace");
     appendCards("earrings");
     document.querySelector("body").removeChild(loader);
-  }, 6 * 1000);
+  }, 3 * 1000);
 
   document
     .querySelector("#necklace-position-x")
@@ -39,6 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {
     .querySelector("#earrings-distance")
     .addEventListener("input", handleEarringsPosition);
 
+  document.querySelector(".compare").addEventListener("click", () => {
+    isComparisonActive = !isComparisonActive;
+    init_comparison();
+  });
+
   document
     .querySelector("#compare")
     .addEventListener("input", handleComparison);
@@ -46,8 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .querySelector(".downloadPhoto")
     .addEventListener("click", downloadImage);
-
-  document.querySelector(".compare").addEventListener("click", init_comparison);
 
   document
     .querySelector("#left-arrow")
@@ -113,9 +116,10 @@ const handleTryOn = (id, card, index) => {
   tryOnDescription.textContent = card.description;
 
   const jewelleryImgContainer = document.querySelector(".jewelleryImg");
-  if (card.orgImage) {
-    jewelleryImgContainer.style.backgroundImage = `url("${card.orgImage}")`;
-  }
+  jewelleryImgContainer.style.backgroundImage = card.orgImage
+    ? `url("${card.orgImage}")`
+    : `url("${defaultBgImage}"`;
+
   const img = document.createElement("img");
   img.src = card.orgImage ? card.orgImage : card.image;
   if (jewelleryImgContainer.lastChild) {
@@ -130,6 +134,8 @@ const handleTryOn = (id, card, index) => {
     backdrop.addEventListener("click", () => {
       canvasContainer.classList.add("removeCanvasContainer");
       document.querySelector("body").removeChild(backdrop);
+      isComparisonActive = false;
+      init_comparison();
     });
 
     document.querySelector("body").prepend(backdrop);
@@ -143,8 +149,7 @@ const handleTryOn = (id, card, index) => {
   }
 
   selectedJewelleryIndex = index;
-  position = [];
-  init_tryOn(id);
+  init_tryOn();
 };
 
 function downloadImage() {
@@ -176,11 +181,11 @@ function handleNecklacePosition(e) {
   const { value, name } = e.target;
 
   if (name === "position-x") {
-    position[0] = value / 1000;
+    necklacePosition[0] = value / 1000;
   } else {
-    position[1] = -value / 100;
+    necklacePosition[1] = -value / 100;
   }
-  tryOn_necklace();
+  init_tryOn();
 }
 
 function handleEarringsPosition(e) {
@@ -199,7 +204,7 @@ function handleEarringsPosition(e) {
     position2[0] = earringPosition.distance / 2;
   }
 
-  tryOn_earrings();
+  init_tryOn();
 }
 
 function nextPrevJewelleryHandler(action) {

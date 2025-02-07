@@ -18,7 +18,7 @@ const jewelleryConfig = {
     },
     {
       position: [0.075, -1.5, 0],
-      scale: [1.5, 1.5, 2],
+      scale: [1.5, 1.75, 2],
       image: "./models/necklace/filter/necklace_16.png",
       label: "Serenity Chain",
       description: "Stainless steel, 5.2g, water-resistant, 16''",
@@ -157,3 +157,5 @@ const jewelleryConfig = {
     },
   ],
 };
+
+const defaultBgImage = "./models/necklace/original/necklace_17.jpg";

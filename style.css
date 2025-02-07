@@ -118,6 +118,10 @@ header .main-heading {
   transition: 0.4s ease-out;
 }
 
+.jewelleryLabel {
+  margin-bottom: 10px;
+}
+
 .card .imgContainer {
   display: flex;
   height: 100%;

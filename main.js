@@ -5,7 +5,7 @@ let JEWELLERYMESH = [];
 let threeStuffs = null;
 let selectedJewelleryIndex = 0;
 let jewellery_type = "";
-let position = [];
+let necklacePosition = [];
 let earringPosition = {
   position1: [],
   position2: [],
@@ -29,20 +29,10 @@ const init_tryOn = () => {
   if (!jewellery_type) {
     return;
   }
-  const { position, scale, image } =
-    jewelleryConfig[jewellery_type][selectedJewelleryIndex];
-  const isNecklace = jewellery_type === "necklace";
 
-  const jewelleryTextureConfig = {
-    scales: isNecklace ? [scale] : [scale, scale],
-    images: isNecklace ? [image] : [image, image],
-    positions: isNecklace
-      ? [position]
-      : [position, [-position[0], ...position.slice(1)]],
-  };
-
-  positionController(jewellery_type);
+  const jewelleryTextureConfig = getJewelleryTextureConfig();
   loadJewelleryTexture({ ...jewelleryTextureConfig });
+  positionController(jewellery_type);
 };
 
 /**
@@ -69,7 +59,7 @@ function loadJewelleryTexture({ images, positions, scales }) {
         });
         materials.push(material);
 
-        if (index + 1 === images.length) {
+        if (materials.length === images.length) {
           if (JEWELLERYMESH.length === 0) {
             createJewelleryMesh(materials, positions, scales);
           } else if (JEWELLERYMESH.length === 1) {
@@ -114,7 +104,6 @@ function loadJewelleryTexture({ images, positions, scales }) {
  */
 function createJewelleryMesh(materials, positions, scales) {
   const geometry = new THREE.PlaneGeometry(1, 1);
-
   JEWELLERYMESH = materials.map((material, index) => {
     const mesh = new THREE.Mesh(geometry, material);
 
@@ -129,35 +118,6 @@ function createJewelleryMesh(materials, positions, scales) {
   });
 
   threeStuffs?.faceObject.add(GROUPOBJ3D);
-}
-
-function handleComparison(e) {
-  const { value } = e.target;
-  const cutoff = value / 100;
-
-  console.log("[]", { JEWELLERYMESH });
-
-  const loader = new THREE.TextureLoader();
-  loader.load(
-    jewelleryConfig[jewellery_type][selectedJewelleryIndex].image,
-    function (texture) {
-      if (texture) {
-        const newTexture = applyGradientFade(
-          applyComparisonGradient(texture, cutoff)
-        );
-        JEWELLERYMESH[0].material.map = newTexture;
-        // JEWELLERYMESH[0].position.set(0.5, 0, 0); // Move right
-        JEWELLERYMESH[0].material.needsUpdate = true;
-      }
-    },
-    undefined,
-    function (err) {
-      console.error("Texture loading error:", err);
-    }
-  );
-
-  const sliderArrow = document.querySelector(".arrowContainer");
-  sliderArrow.style.left = 150 + (value * 3.5 - 175) + "px";
 }
 
 function main() {
