@@ -117,6 +117,17 @@ function createJewelleryMesh(materials, positions, scales) {
     return mesh;
   });
 
+  FACEMESH = JeelizThreeHelper.create_threejsOccluder(
+    "./models/face/face.json"
+  );
+  FACEMESH.frustumCulled = false;
+  FACEMESH.scale.set(1.25, 1, 1);
+  FACEMESH.position.set(0, 0.7, -0.75);
+  FACEMESH.renderOrder = 100000;
+
+  GROUPOBJ3D.add(FACEMESH);
+
+  console.log("[]", GROUPOBJ3D);
   threeStuffs?.faceObject.add(GROUPOBJ3D);
 }
 
