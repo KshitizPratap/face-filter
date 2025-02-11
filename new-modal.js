@@ -3,19 +3,17 @@ import * as THREE from "three";
 
 const demosSection = document.getElementById("demos");
 
-let faceLandmarker, faceOutline;
-let runningMode = "IMAGE";
-let scene, camera, renderer, faceMesh, videoTexture;
+let faceLandmarker, faceMesh, leftEarring, rightEarring;
+let scene, camera, renderer, videoTexture;
 let video = document.getElementById("webcam");
 
-const FACE_OVAL_INDICES = [
-  10, 338, 297, 332, 284, 251, 389, 356, 454, 323, 361, 288, 397, 365, 379, 378,
-  400, 377, 152, 148, 176, 149, 150, 136, 172, 58, 132, 93, 234, 127, 162, 21,
-  54, 103, 67, 109,
-];
+// Buffers for stabilizing earrings position
+let leftEarBuffer = { x: 0, y: 0 };
+let rightEarBuffer = { x: 0, y: 0 };
+const alpha = 0.2;
 
 /********************************************************************/
-//  Initialize Mediapipe FaceLandmarker (For 468 Keypoints)
+//  Initialize Mediapipe FaceLandmarker
 /********************************************************************/
 const initializeFaceLandmarker = async () => {
   const vision = await FilesetResolver.forVisionTasks(
@@ -26,7 +24,7 @@ const initializeFaceLandmarker = async () => {
       modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task`,
       delegate: "GPU",
     },
-    runningMode: runningMode,
+    runningMode: "VIDEO",
     numFaces: 1,
   });
   demosSection.classList.remove("invisible");
@@ -39,49 +37,77 @@ initializeFaceLandmarker();
 //  Initialize THREE.js Scene
 /********************************************************************/
 function initThreeJS() {
-  // Get the existing canvas element
   const canvas = document.getElementById("renderer");
-
-  // Create the THREE.js renderer using the existing canvas
   renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+  renderer.setSize(640, 480);
 
-  // Set the correct size
-  renderer.setSize(640, 480); // Match the canvas size in the HTML
-
-  // Create Scene and Camera
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(75, 600 / 600, 0.1, 1000);
   camera.position.z = 2;
 
-  // Create an initial face mesh
   createFaceMesh();
+  createEarrings();
   animate();
 }
 
 /********************************************************************/
-//  Create a Face Mesh with Red Material (Supports 468 Keypoints)
+//  Create a Face Mesh
 /********************************************************************/
 function createFaceMesh() {
   const shape = new THREE.Shape();
-  const outlineVertices = new Float32Array(FACE_OVAL_INDICES.length * 3);
-
-  // Initialize the shape with the first point
   shape.moveTo(0, 0);
-
-  // Create the face outline shape
-  FACE_OVAL_INDICES.forEach((index, i) => {
-    shape.lineTo(0, 0); // Temporary, will update dynamically
+  FACE_OVAL_INDICES.forEach(() => {
+    shape.lineTo(0, 0);
   });
 
   const geometry = new THREE.ShapeGeometry(shape);
   const material = new THREE.MeshBasicMaterial({
-    color: 0xffffff, // White color
+    // color: 0xffffff,
+    colorWrite: false,
     side: THREE.DoubleSide,
+    opacity: 0,
   });
 
-  faceOutline = new THREE.Mesh(geometry, material);
-  faceOutline.scale.set(1.5, 1.5, 1);
-  scene.add(faceOutline);
+  faceMesh = new THREE.Mesh(geometry, material);
+  faceMesh.scale.set(1.65, 1.5, 1);
+  scene.add(faceMesh);
+}
+
+/********************************************************************/
+//  Create Earrings Mesh
+/********************************************************************/
+function createEarrings() {
+  const geometry = new THREE.PlaneGeometry(1, 1); // Adjust size
+
+  // Load earring textures
+  const leftTexture = new THREE.TextureLoader().load(
+    "./models/earrings/earrings_1.png"
+  );
+  const rightTexture = new THREE.TextureLoader().load(
+    "./models/earrings/earrings_1.png"
+  );
+
+  const leftMaterial = new THREE.MeshBasicMaterial({
+    map: leftTexture,
+    transparent: true,
+  });
+  const rightMaterial = new THREE.MeshBasicMaterial({
+    map: rightTexture,
+    transparent: true,
+  });
+
+  leftEarring = new THREE.Mesh(geometry, leftMaterial);
+  rightEarring = new THREE.Mesh(geometry, rightMaterial);
+
+  // Initial positions (will be updated dynamically)
+  leftEarring.position.set(-0.5, 0, 0);
+  rightEarring.position.set(0.5, 0, 0);
+
+  leftEarring.scale.set(0.075, 0.2, 0.4);
+  rightEarring.scale.set(0.075, 0.2, 0.4);
+
+  faceMesh.add(leftEarring);
+  faceMesh.add(rightEarring);
 }
 
 /********************************************************************/
@@ -96,7 +122,6 @@ if (hasGetUserMedia()) {
   console.warn("getUserMedia() is not supported by your browser");
 }
 
-// Enable webcam
 async function enableCam(event) {
   if (!faceLandmarker) {
     alert("Face Landmarker is still loading. Please try again..");
@@ -122,22 +147,18 @@ async function enableCam(event) {
 }
 
 /********************************************************************/
-//  Face Detection & 3D Mesh Update (468 Keypoints)
+//  Face Detection & 3D Mesh Update
 /********************************************************************/
 let lastVideoTime = -1;
 async function predictWebcam() {
-  if (runningMode === "IMAGE") {
-    runningMode = "VIDEO";
-    await faceLandmarker.setOptions({ runningMode: "VIDEO" });
-  }
-
   let startTimeMs = performance.now();
   if (video.currentTime !== lastVideoTime) {
     lastVideoTime = video.currentTime;
     const results = await faceLandmarker.detectForVideo(video, startTimeMs);
 
     if (results.faceLandmarks.length > 0) {
-      updateFaceMesh(results.faceLandmarks[0]); // Use the first detected face
+      updateFaceMesh(results.faceLandmarks[0]);
+      updateEarrings(results.faceLandmarks[0]);
     }
   }
 
@@ -145,10 +166,10 @@ async function predictWebcam() {
 }
 
 /********************************************************************/
-//  Update Face Mesh to Show 468 Keypoints
+//  Update Face Mesh
 /********************************************************************/
 function updateFaceMesh(landmarks) {
-  if (!faceOutline || landmarks.length === 0) return;
+  if (!faceMesh || landmarks.length === 0) return;
 
   const keypoints = landmarks.map((kp) => [
     -(kp.x - 0.5) * 2, // Flip horizontally
@@ -166,8 +187,31 @@ function updateFaceMesh(landmarks) {
   });
 
   const geometry = new THREE.ShapeGeometry(shape);
-  faceOutline.geometry.dispose(); // Free old geometry memory
-  faceOutline.geometry = geometry;
+  faceMesh.geometry.dispose();
+  faceMesh.geometry = geometry;
+}
+
+/********************************************************************/
+//  Update Earrings Position with Smoothing
+/********************************************************************/
+function updateEarrings(landmarks) {
+  if (!leftEarring || !rightEarring || landmarks.length === 0) return;
+
+  let leftX = -(landmarks[LEFT_EAR_BOTTOM].x - 0.5) * 2;
+  let leftY = -(landmarks[LEFT_EAR_BOTTOM].y - 0.5) * 2;
+
+  let rightX = -(landmarks[RIGHT_EAR_BOTTOM].x - 0.5) * 2;
+  let rightY = -(landmarks[RIGHT_EAR_BOTTOM].y - 0.5) * 2;
+
+  // Smooth position using an exponential moving average
+  leftEarBuffer.x = alpha * leftX + (1 - alpha) * leftEarBuffer.x;
+  leftEarBuffer.y = alpha * leftY + (1 - alpha) * leftEarBuffer.y;
+
+  rightEarBuffer.x = alpha * rightX + (1 - alpha) * rightEarBuffer.x;
+  rightEarBuffer.y = alpha * rightY + (1 - alpha) * rightEarBuffer.y;
+
+  leftEarring.position.set(leftEarBuffer.x, leftEarBuffer.y - 0.07, 0.1);
+  rightEarring.position.set(rightEarBuffer.x, rightEarBuffer.y - 0.07, 0.1);
 }
 
 /********************************************************************/
