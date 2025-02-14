@@ -45,13 +45,15 @@
     <header>
       <img src="./public/logo.png" class="logo" alt="logo" loading="lazy" />
       <h2 class="main-heading">Virtual Try-on</h2>
+      <div class="navbar">
+        <a href="/">Necklace</a>
+        <a href="/earrings/new-modal.html">Earrings</a>
+      </div>
     </header>
     <div class="loader"><p></p></div>
     <div class="mainContainer">
       <h2>Necklace Virtual Try-on</h2>
       <div class="container" id="necklace"></div>
-      <h2>Earrings Virtual Try-on</h2>
-      <div class="container" id="earrings"></div>
       <div class="canvasContainer removeCanvasContainer">
         <img
           src="./public/left-arrow.png"
@@ -91,45 +93,6 @@
                 id="necklace-position-y"
                 min="100"
                 max="150"
-                class="range-slider"
-              />
-            </div>
-          </div>
-          <div class="controllerContainer" id="earringsControllers">
-            <h4>Filter Position</h4>
-            <div class="controller">
-              <label for="position-x">Move Horizontally</label>
-              <span class="slider-bar"></span>
-              <input
-                type="range"
-                name="position-x"
-                id="earrings-position-x"
-                min="50"
-                max="80"
-                class="range-slider"
-              />
-            </div>
-
-            <div class="controller">
-              <label for="position-y">Move Vertically</label>
-              <input
-                type="range"
-                name="position-y"
-                id="earrings-position-y"
-                min="25"
-                max="300"
-                class="range-slider"
-              />
-            </div>
-
-            <div class="controller">
-              <label for="distance">Distance between Earrings</label>
-              <input
-                type="range"
-                name="distance"
-                id="earrings-distance"
-                min="100"
-                max="160"
                 class="range-slider"
               />
             </div>

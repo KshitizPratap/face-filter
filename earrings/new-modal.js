@@ -1,13 +1,7 @@
 import { FaceLandmarker, FilesetResolver } from "mediapipe";
 import * as THREE from "three";
 
-let THREECAMERA = null;
-let GROUPOBJ3D = null;
-let FACEMESH = null;
 let JEWELLERYMESH = [];
-let threeStuffs = null;
-let jewellery_type = "";
-let necklacePosition = [];
 let earringPosition = {
   position1: [],
   position2: [],
@@ -95,7 +89,15 @@ function createEarrings() {
   }
 
   const geometry = new THREE.PlaneGeometry(1, 1); // Adjust size
-  const { image } = jewelleryConfig.earrings[selectedJewelleryIndex];
+  const { image, position, scale } =
+    jewelleryConfig.earrings[selectedJewelleryIndex];
+  const second_position = [-position[0], ...position.slice(1)];
+
+  earringPosition = {
+    position1: position,
+    position2: second_position,
+    distance: Math.abs(2 * position[0]),
+  };
 
   // Load earring textures
   const leftTexture = new THREE.TextureLoader().load(image);
@@ -127,8 +129,8 @@ function createEarrings() {
   JEWELLERYMESH[0].position.set(-0.5, 0, 0);
   JEWELLERYMESH[1].position.set(0.5, 0, 0);
 
-  JEWELLERYMESH[0].scale.set(0.045, 0.125, 0.4);
-  JEWELLERYMESH[1].scale.set(0.045, 0.125, 0.4);
+  JEWELLERYMESH[0].scale.set(...scale);
+  JEWELLERYMESH[1].scale.set(...scale);
 
   faceMesh.add(JEWELLERYMESH[0]);
   faceMesh.add(JEWELLERYMESH[1]);
@@ -205,16 +207,15 @@ function updateEarrings(landmarks) {
   rightEarBuffer.x = alpha * rightX + (1 - alpha) * rightEarBuffer.x;
   rightEarBuffer.y = alpha * rightY + (1 - alpha) * rightEarBuffer.y;
 
+  const [x1, y1, z1] = earringPosition.position1;
+  const [x2, y2, z2] = earringPosition.position2;
+
   // Update earring positions
-  JEWELLERYMESH[0].position.set(
-    leftEarBuffer.x + 0.022,
-    leftEarBuffer.y - 0.1,
-    0.1
-  );
+  JEWELLERYMESH[0].position.set(leftEarBuffer.x + x1, leftEarBuffer.y + y1, z1);
   JEWELLERYMESH[1].position.set(
-    rightEarBuffer.x - 0.022,
-    rightEarBuffer.y - 0.1,
-    0.1
+    rightEarBuffer.x + x2,
+    rightEarBuffer.y + y2,
+    z2
   );
 }
 
@@ -332,3 +333,22 @@ export const handleTryOn = (index, card) => {
     console.warn("getUserMedia() is not supported by your browser");
   }
 };
+
+export function handleEarringsPosition(e) {
+  const { distance, position1, position2 } = earringPosition;
+  const { value, name } = e.target;
+
+  if (name === "position-x") {
+    position1[0] = value / 1000;
+    position2[0] = value / 1000 - distance;
+  } else if (name === "position-y") {
+    position1[1] = (value - 100) / 1000;
+    position2[1] = (value - 100) / 1000;
+  } else {
+    earringPosition.distance = -value / 1000;
+    position1[0] = -earringPosition.distance / 2;
+    position2[0] = earringPosition.distance / 2;
+  }
+
+  predictWebcam();
+}

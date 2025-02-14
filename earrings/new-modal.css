@@ -29,11 +29,8 @@ video {
   padding: 0;
 }
 a {
-  color: #eee;
+  color: #266d9f;
   text-decoration: none;
-}
-a:hover {
-  color: blue;
 }
 img {
   object-fit: contain;
@@ -70,6 +67,17 @@ header .main-heading {
   text-align: center;
   color: #266d9f;
   font-weight: normal;
+  margin-left: 10rem;
+}
+
+.navbar {
+  display: flex;
+  gap: 1rem;
+  margin-right: 2rem;
+}
+
+.navbar a:hover {
+  color: rgb(216, 174, 112);
 }
 
 .mainContainer {
@@ -299,6 +307,7 @@ header .main-heading {
   margin: 0;
   height: 6px;
   transition: all ease-in 0.25s;
+  margin-top: 10px;
 }
 
 .controllerContainer .range-slider::-webkit-slider-thumb {

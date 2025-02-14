@@ -1,5 +1,5 @@
 import {
-  enableCam,
+  handleEarringsPosition,
   handleTryOn,
   nextPrevJewelleryHandler,
 } from "./new-modal.js";
@@ -7,17 +7,17 @@ import {
 document.addEventListener("DOMContentLoaded", function () {
   appendCards("earrings");
 
-  //   document
-  //     .querySelector("#earrings-position-x")
-  //     .addEventListener("input", handleEarringsPosition);
+  document
+    .querySelector("#earrings-position-x")
+    .addEventListener("input", handleEarringsPosition);
 
-  //   document
-  //     .querySelector("#earrings-position-y")
-  //     .addEventListener("input", handleEarringsPosition);
+  document
+    .querySelector("#earrings-position-y")
+    .addEventListener("input", handleEarringsPosition);
 
-  //   document
-  //     .querySelector("#earrings-distance")
-  //     .addEventListener("input", handleEarringsPosition);
+  document
+    .querySelector("#earrings-distance")
+    .addEventListener("input", handleEarringsPosition);
 
   document
     .querySelector(".downloadPhoto")

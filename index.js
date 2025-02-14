@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => {
     mainContainer.classList.remove("displayNone");
     appendCards("necklace");
-    appendCards("earrings");
     document.querySelector("body").removeChild(loader);
   }, 3 * 1000);
 

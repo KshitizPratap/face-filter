@@ -127,7 +127,6 @@ function createJewelleryMesh(materials, positions, scales) {
 
   GROUPOBJ3D.add(FACEMESH);
 
-  console.log("[]", GROUPOBJ3D);
   threeStuffs?.faceObject.add(GROUPOBJ3D);
 }
 
