@@ -168,5 +168,5 @@ const FACE_OVAL_INDICES = [
 
 const LEFT_EAR_BOTTOM = 93;
 const RIGHT_EAR_BOTTOM = 323;
-const LEFT_CHEEK = 187;
-const RIGHT_CHEEK = 411;
+const LEFT_CHEEK = 123;
+const RIGHT_CHEEK = 352;
