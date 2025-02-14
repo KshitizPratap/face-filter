@@ -1,9 +1,22 @@
 import { FaceLandmarker, FilesetResolver } from "mediapipe";
 import * as THREE from "three";
 
-const demosSection = document.getElementById("demos");
+let THREECAMERA = null;
+let GROUPOBJ3D = null;
+let FACEMESH = null;
+let JEWELLERYMESH = [];
+let threeStuffs = null;
+let jewellery_type = "";
+let necklacePosition = [];
+let earringPosition = {
+  position1: [],
+  position2: [],
+  distance: 0,
+};
 
-let faceLandmarker, faceMesh, leftEarring, rightEarring;
+const demosSection = document.getElementById("demos");
+window.selectedJewelleryIndex = 0;
+let faceLandmarker, faceMesh;
 let scene, camera, renderer, videoTexture;
 let video = document.getElementById("webcam");
 
@@ -39,14 +52,13 @@ initializeFaceLandmarker();
 function initThreeJS() {
   const canvas = document.getElementById("renderer");
   renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-  renderer.setSize(640, 480);
+  renderer.setSize(500, 575);
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, 640 / 480, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(75, 500 / 575, 0.1, 1000);
   camera.position.z = 2;
 
   createFaceMesh();
-  createEarrings();
   animate();
 }
 
@@ -77,15 +89,17 @@ function createFaceMesh() {
 //  Create Earrings Mesh
 /********************************************************************/
 function createEarrings() {
+  if (JEWELLERYMESH[0]) {
+    faceMesh.remove(JEWELLERYMESH[0]);
+    faceMesh.remove(JEWELLERYMESH[1]);
+  }
+
   const geometry = new THREE.PlaneGeometry(1, 1); // Adjust size
+  const { image } = jewelleryConfig.earrings[selectedJewelleryIndex];
 
   // Load earring textures
-  const leftTexture = new THREE.TextureLoader().load(
-    "./models/earrings/earrings_1.png"
-  );
-  const rightTexture = new THREE.TextureLoader().load(
-    "./models/earrings/earrings_1.png"
-  );
+  const leftTexture = new THREE.TextureLoader().load(image);
+  const rightTexture = new THREE.TextureLoader().load(image);
 
   const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
   leftTexture.anisotropy = maxAnisotropy;
@@ -106,18 +120,18 @@ function createEarrings() {
     transparent: true,
   });
 
-  leftEarring = new THREE.Mesh(geometry, leftMaterial);
-  rightEarring = new THREE.Mesh(geometry, rightMaterial);
+  JEWELLERYMESH[0] = new THREE.Mesh(geometry, leftMaterial);
+  JEWELLERYMESH[1] = new THREE.Mesh(geometry, rightMaterial);
 
   // Initial positions (will be updated dynamically)
-  leftEarring.position.set(-0.5, 0, 0);
-  rightEarring.position.set(0.5, 0, 0);
+  JEWELLERYMESH[0].position.set(-0.5, 0, 0);
+  JEWELLERYMESH[1].position.set(0.5, 0, 0);
 
-  leftEarring.scale.set(0.045, 0.125, 0.4);
-  rightEarring.scale.set(0.045, 0.125, 0.4);
+  JEWELLERYMESH[0].scale.set(0.045, 0.125, 0.4);
+  JEWELLERYMESH[1].scale.set(0.045, 0.125, 0.4);
 
-  faceMesh.add(leftEarring);
-  faceMesh.add(rightEarring);
+  faceMesh.add(JEWELLERYMESH[0]);
+  faceMesh.add(JEWELLERYMESH[1]);
 }
 
 /********************************************************************/
@@ -150,7 +164,7 @@ function updateFaceMesh(landmarks) {
 //  Update Earrings Position with Smoothing
 /********************************************************************/
 function updateEarrings(landmarks) {
-  if (!leftEarring || !rightEarring || landmarks.length === 0) return;
+  if (!JEWELLERYMESH[0] || !JEWELLERYMESH[1] || landmarks.length === 0) return;
 
   let leftX = -(landmarks[LEFT_EAR_BOTTOM].x - 0.5) * 2;
   let leftY = -(landmarks[LEFT_EAR_BOTTOM].y - 0.5) * 2;
@@ -168,19 +182,21 @@ function updateEarrings(landmarks) {
   let rightTargetOpacity = rightX > rightCheekX ? 0 : 1;
 
   // Smoothly interpolate opacity
-  leftEarring.material.opacity =
+  JEWELLERYMESH[0].material.opacity =
     fadeSpeed * leftTargetOpacity +
-    (1 - fadeSpeed) * leftEarring.material.opacity;
-  rightEarring.material.opacity =
+    (1 - fadeSpeed) * JEWELLERYMESH[0].material.opacity;
+  JEWELLERYMESH[1].material.opacity =
     fadeSpeed * rightTargetOpacity +
-    (1 - fadeSpeed) * rightEarring.material.opacity;
+    (1 - fadeSpeed) * JEWELLERYMESH[1].material.opacity;
 
   // If opacity reaches near zero, hide completely
-  if (leftEarring.material.opacity < 0.05) leftEarring.visible = false;
-  else leftEarring.visible = true;
+  if (JEWELLERYMESH[0].material.opacity < 0.05)
+    JEWELLERYMESH[0].visible = false;
+  else JEWELLERYMESH[0].visible = true;
 
-  if (rightEarring.material.opacity < 0.05) rightEarring.visible = false;
-  else rightEarring.visible = true;
+  if (JEWELLERYMESH[1].material.opacity < 0.05)
+    JEWELLERYMESH[1].visible = false;
+  else JEWELLERYMESH[1].visible = true;
 
   // Smooth position using an exponential moving average
   leftEarBuffer.x = alpha * leftX + (1 - alpha) * leftEarBuffer.x;
@@ -190,8 +206,12 @@ function updateEarrings(landmarks) {
   rightEarBuffer.y = alpha * rightY + (1 - alpha) * rightEarBuffer.y;
 
   // Update earring positions
-  leftEarring.position.set(leftEarBuffer.x + 0.022, leftEarBuffer.y - 0.1, 0.1);
-  rightEarring.position.set(
+  JEWELLERYMESH[0].position.set(
+    leftEarBuffer.x + 0.022,
+    leftEarBuffer.y - 0.1,
+    0.1
+  );
+  JEWELLERYMESH[1].position.set(
     rightEarBuffer.x - 0.022,
     rightEarBuffer.y - 0.1,
     0.1
@@ -201,25 +221,17 @@ function updateEarrings(landmarks) {
 /********************************************************************/
 //  Setup Webcam Feed
 /********************************************************************/
-let enableWebcamButton;
-const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
-if (hasGetUserMedia()) {
-  enableWebcamButton = document.getElementById("webcamButton");
-  enableWebcamButton.addEventListener("click", enableCam);
-} else {
-  console.warn("getUserMedia() is not supported by your browser");
-}
 
-async function enableCam(event) {
+export async function enableCam(index) {
   if (!faceLandmarker) {
     alert("Face Landmarker is still loading. Please try again..");
     return;
   }
 
-  enableWebcamButton.classList.add("removed");
-
   const canvas = document.getElementById("renderer");
   canvas.style.display = "block";
+  selectedJewelleryIndex = index;
+  createEarrings();
 
   const constraints = { video: true };
   navigator.mediaDevices
@@ -232,6 +244,20 @@ async function enableCam(event) {
     .catch((err) => {
       console.error(err);
     });
+}
+
+export function nextPrevJewelleryHandler(action) {
+  const jewelleryArray = [...jewelleryConfig["earrings"]];
+  const length = jewelleryArray.length;
+
+  if (action === "next") {
+    selectedJewelleryIndex = (selectedJewelleryIndex + 1) % length;
+  } else {
+    selectedJewelleryIndex =
+      selectedJewelleryIndex - 1 < 0 ? length - 1 : selectedJewelleryIndex - 1;
+  }
+
+  handleTryOn(selectedJewelleryIndex, jewelleryArray[selectedJewelleryIndex]);
 }
 
 /********************************************************************/
@@ -260,3 +286,49 @@ function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }
+
+export const handleTryOn = (index, card) => {
+  const canvasContainer = document.querySelector(".canvasContainer");
+  canvasContainer.classList.remove("removeCanvasContainer");
+
+  const tryOnHeading = document.querySelector(
+    ".canvasContainer .jewelleryDetails .jewelleryLabel h3"
+  );
+  tryOnHeading.textContent = card.label;
+
+  const tryOnDescription = document.querySelector(
+    ".canvasContainer .jewelleryDetails .jewelleryLabel span"
+  );
+  tryOnDescription.textContent = card.description;
+
+  const jewelleryImgContainer = document.querySelector(".jewelleryImg");
+  jewelleryImgContainer.style.backgroundImage = card.orgImage
+    ? `url("${card.orgImage}")`
+    : `url("${defaultBgImage}"`;
+
+  const img = document.createElement("img");
+  img.src = card.orgImage ? card.orgImage : card.image;
+  if (jewelleryImgContainer.lastChild) {
+    jewelleryImgContainer.removeChild(jewelleryImgContainer.lastChild);
+  }
+  jewelleryImgContainer.appendChild(img);
+
+  const hasBackdrop = !!document.querySelector(".backdrop");
+  if (!hasBackdrop) {
+    const backdrop = document.createElement("div");
+    backdrop.classList.add("backdrop");
+    backdrop.addEventListener("click", () => {
+      canvasContainer.classList.add("removeCanvasContainer");
+      document.querySelector("body").removeChild(backdrop);
+    });
+
+    document.querySelector("body").prepend(backdrop);
+  }
+
+  const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
+  if (hasGetUserMedia()) {
+    enableCam(index);
+  } else {
+    console.warn("getUserMedia() is not supported by your browser");
+  }
+};

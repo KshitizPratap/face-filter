@@ -1,0 +1,324 @@
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap");
+
+.videoView {
+  position: relative;
+}
+
+video {
+  clear: both;
+  display: block;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  width: 500px;
+  height: 575px;
+  object-fit: cover;
+}
+
+.videoContainer #renderer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  display: none;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+a {
+  color: #eee;
+  text-decoration: none;
+}
+a:hover {
+  color: blue;
+}
+img {
+  object-fit: contain;
+}
+body {
+  overflow: auto;
+  overflow-y: auto;
+  background-color: white;
+  margin: 0px;
+  font-family: Urbanist;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  height: 70px;
+  background-image: url("/public/navbg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  position: relative;
+}
+
+.logo {
+  height: 70%;
+  position: absolute;
+  left: 2rem;
+  top: 15%;
+}
+
+header .main-heading {
+  width: 100%;
+  text-align: center;
+  color: #266d9f;
+  font-weight: normal;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 5rem;
+}
+
+.mainContainer h2 {
+  font-family: Urbanist;
+  color: #266d9f;
+  font-size: 28px;
+  font-weight: normal;
+}
+
+.displayNone {
+  display: none;
+}
+
+.loader {
+  height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader p {
+  font-size: 36px;
+  font-weight: 500;
+}
+
+.containerStyles {
+  height: 375px;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 3.5rem;
+  overflow-x: auto;
+}
+
+.container .card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  height: 280px;
+  width: 200px;
+  border-radius: 10px;
+  box-shadow: -0.5rem 0 1rem #b5b5b5;
+  background-color: #fff6ed;
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+  cursor: pointer;
+}
+
+.container .card:not(:first-child) {
+  margin-left: -50px;
+}
+
+.container .card:hover {
+  transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
+
+.container .card:hover ~ .card {
+  position: relative;
+  left: 50px;
+  transition: 0.4s ease-out;
+}
+
+.jewelleryLabel {
+  margin-bottom: 10px;
+}
+
+.card .imgContainer {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.container .card h4 {
+}
+
+.container .card span {
+  font-size: 12px;
+}
+
+.container .card img {
+  align-self: center;
+  width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.removeCanvasContainer {
+  display: none !important;
+}
+
+.canvasContainer {
+  width: 1000px;
+  position: fixed;
+  z-index: 10;
+  top: calc(50vh - 307px);
+  left: calc(50vw - 500px);
+  padding: 2rem 1rem;
+  border-radius: 8px;
+  background-color: #fff6ed;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.canvasContainer h3 {
+  font-size: 24px;
+}
+
+.downloadPhoto,
+.compare {
+  width: 150px;
+  height: 36px;
+  position: absolute;
+  bottom: 3rem;
+  left: 380px;
+  border: 1px solid #ccc;
+  border-radius: 18px;
+  background-color: #111111aa;
+  color: #eee;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0.5rem;
+  font-family: Urbanist;
+  z-index: 10;
+}
+
+.downloadPhoto img {
+  height: 70%;
+  border-radius: 50%;
+}
+
+.compare {
+  bottom: 6rem;
+}
+
+.compare img {
+  height: 70%;
+  filter: invert();
+  margin-left: 0.25rem;
+}
+
+.arrow {
+  height: 35px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+#jeeFaceFilterCanvas {
+  height: 575px;
+  width: 500px;
+  align-self: center;
+  border-radius: 8px;
+  margin: 0 1.25rem;
+}
+
+.jewelleryDetails {
+  width: 350px;
+  align-self: flex-start;
+  margin: 0 1.25rem;
+}
+
+.canvasContainer .jewelleryImg {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  border-radius: 4px;
+  width: 100%;
+  height: 250px;
+  padding: 0.5rem;
+}
+
+.canvasContainer .jewelleryImg img {
+  height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.controllerContainer {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.controllerContainer h4 {
+  font-size: 18px;
+}
+
+.controllerContainer .controller {
+  position: relative;
+  width: 100%;
+  margin: 10px 0 30px;
+}
+
+.controllerContainer .range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #266d9f6e;
+  width: 100%;
+  border-radius: 3px;
+  vertical-align: bottom;
+  margin: 0;
+  height: 6px;
+  transition: all ease-in 0.25s;
+}
+
+.controllerContainer .range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  border: 0;
+  position: relative;
+  width: 4px;
+  height: 15px;
+  background-color: #266d9f;
+  cursor: pointer;
+}
+.controllerContainer .range-slider::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  border: 0;
+  position: relative;
+  width: 4px;
+  height: 15px;
+  background-color: #266d9f;
+}
