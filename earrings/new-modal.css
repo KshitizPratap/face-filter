@@ -48,7 +48,7 @@ header {
   align-items: center;
   padding: 0 2rem;
   height: 70px;
-  background-image: url("/public/navbg.png");
+  background-image: url("../public/navbg.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
