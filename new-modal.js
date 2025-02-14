@@ -154,11 +154,33 @@ function updateEarrings(landmarks) {
 
   let leftX = -(landmarks[LEFT_EAR_BOTTOM].x - 0.5) * 2;
   let leftY = -(landmarks[LEFT_EAR_BOTTOM].y - 0.5) * 2;
-  let leftZ = landmarks[LEFT_EAR_BOTTOM].z;
 
   let rightX = -(landmarks[RIGHT_EAR_BOTTOM].x - 0.5) * 2;
   let rightY = -(landmarks[RIGHT_EAR_BOTTOM].y - 0.5) * 2;
-  let rightZ = landmarks[RIGHT_EAR_BOTTOM].z;
+
+  let leftCheekX = -(landmarks[LEFT_CHEEK].x - 0.5) * 2;
+  let rightCheekX = -(landmarks[RIGHT_CHEEK].x - 0.5) * 2;
+
+  let fadeSpeed = 0.25;
+
+  // Compute target opacity based on position
+  let leftTargetOpacity = leftX < leftCheekX ? 0 : 1;
+  let rightTargetOpacity = rightX > rightCheekX ? 0 : 1;
+
+  // Smoothly interpolate opacity
+  leftEarring.material.opacity =
+    fadeSpeed * leftTargetOpacity +
+    (1 - fadeSpeed) * leftEarring.material.opacity;
+  rightEarring.material.opacity =
+    fadeSpeed * rightTargetOpacity +
+    (1 - fadeSpeed) * rightEarring.material.opacity;
+
+  // If opacity reaches near zero, hide completely
+  if (leftEarring.material.opacity < 0.05) leftEarring.visible = false;
+  else leftEarring.visible = true;
+
+  if (rightEarring.material.opacity < 0.05) rightEarring.visible = false;
+  else rightEarring.visible = true;
 
   // Smooth position using an exponential moving average
   leftEarBuffer.x = alpha * leftX + (1 - alpha) * leftEarBuffer.x;
@@ -168,15 +190,11 @@ function updateEarrings(landmarks) {
   rightEarBuffer.y = alpha * rightY + (1 - alpha) * rightEarBuffer.y;
 
   // Update earring positions
-  leftEarring.position.set(
-    leftEarBuffer.x + 0.035,
-    leftEarBuffer.y - 0.07,
-    -0.1
-  );
+  leftEarring.position.set(leftEarBuffer.x + 0.022, leftEarBuffer.y - 0.1, 0.1);
   rightEarring.position.set(
-    rightEarBuffer.x - 0.05,
-    rightEarBuffer.y - 0.07,
-    -0.1
+    rightEarBuffer.x - 0.022,
+    rightEarBuffer.y - 0.1,
+    0.1
   );
 }
 
