@@ -42,7 +42,7 @@ function initThreeJS() {
   renderer.setSize(640, 480);
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, 600 / 600, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(75, 640 / 480, 0.1, 1000);
   camera.position.z = 2;
 
   createFaceMesh();
@@ -62,14 +62,14 @@ function createFaceMesh() {
 
   const geometry = new THREE.ShapeGeometry(shape);
   const material = new THREE.MeshBasicMaterial({
-    // color: 0xffffff,
     colorWrite: false,
+    color: 0xfff,
     side: THREE.DoubleSide,
     opacity: 0,
   });
 
   faceMesh = new THREE.Mesh(geometry, material);
-  faceMesh.scale.set(1.65, 1.5, 1);
+  faceMesh.scale.set(2, 1.75, 1);
   scene.add(faceMesh);
 }
 
@@ -87,6 +87,16 @@ function createEarrings() {
     "./models/earrings/earrings_1.png"
   );
 
+  const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+  leftTexture.anisotropy = maxAnisotropy;
+  rightTexture.anisotropy = maxAnisotropy;
+
+  leftTexture.minFilter = THREE.LinearMipMapLinearFilter;
+  leftTexture.magFilter = THREE.LinearFilter;
+
+  rightTexture.minFilter = THREE.LinearMipMapLinearFilter;
+  rightTexture.magFilter = THREE.LinearFilter;
+
   const leftMaterial = new THREE.MeshBasicMaterial({
     map: leftTexture,
     transparent: true,
@@ -103,11 +113,69 @@ function createEarrings() {
   leftEarring.position.set(-0.5, 0, 0);
   rightEarring.position.set(0.5, 0, 0);
 
-  leftEarring.scale.set(0.075, 0.2, 0.4);
-  rightEarring.scale.set(0.075, 0.2, 0.4);
+  leftEarring.scale.set(0.045, 0.125, 0.4);
+  rightEarring.scale.set(0.045, 0.125, 0.4);
 
   faceMesh.add(leftEarring);
   faceMesh.add(rightEarring);
+}
+
+/********************************************************************/
+//  Update Face Mesh
+/********************************************************************/
+function updateFaceMesh(landmarks) {
+  if (!faceMesh || landmarks.length === 0) return;
+
+  const keypoints = landmarks.map((kp) => [
+    -(kp.x - 0.5) * 2, // Flip horizontally
+    -(kp.y - 0.5) * 2,
+    kp.z * 2,
+  ]);
+
+  const shape = new THREE.Shape();
+  const firstPoint = keypoints[FACE_OVAL_INDICES[0]];
+  shape.moveTo(firstPoint[0], firstPoint[1]);
+
+  FACE_OVAL_INDICES.forEach((index) => {
+    const [x, y] = keypoints[index];
+    shape.lineTo(x, y);
+  });
+
+  const geometry = new THREE.ShapeGeometry(shape);
+  faceMesh.geometry.dispose();
+  faceMesh.geometry = geometry;
+}
+
+/********************************************************************/
+//  Update Earrings Position with Smoothing
+/********************************************************************/
+function updateEarrings(landmarks) {
+  if (!leftEarring || !rightEarring || landmarks.length === 0) return;
+
+  let leftX = -(landmarks[LEFT_EAR_BOTTOM].x - 0.5) * 2;
+  let leftY = -(landmarks[LEFT_EAR_BOTTOM].y - 0.5) * 2;
+
+  let rightX = -(landmarks[RIGHT_EAR_BOTTOM].x - 0.5) * 2;
+  let rightY = -(landmarks[RIGHT_EAR_BOTTOM].y - 0.5) * 2;
+
+  // Smooth position using an exponential moving average
+  leftEarBuffer.x = alpha * leftX + (1 - alpha) * leftEarBuffer.x;
+  leftEarBuffer.y = alpha * leftY + (1 - alpha) * leftEarBuffer.y;
+
+  rightEarBuffer.x = alpha * rightX + (1 - alpha) * rightEarBuffer.x;
+  rightEarBuffer.y = alpha * rightY + (1 - alpha) * rightEarBuffer.y;
+
+  // Update earring positions
+  leftEarring.position.set(
+    leftEarBuffer.x + 0.025,
+    leftEarBuffer.y - 0.025,
+    0.1
+  );
+  rightEarring.position.set(
+    rightEarBuffer.x - 0.025,
+    rightEarBuffer.y - 0.025,
+    0.1
+  );
 }
 
 /********************************************************************/
@@ -163,55 +231,6 @@ async function predictWebcam() {
   }
 
   window.requestAnimationFrame(predictWebcam);
-}
-
-/********************************************************************/
-//  Update Face Mesh
-/********************************************************************/
-function updateFaceMesh(landmarks) {
-  if (!faceMesh || landmarks.length === 0) return;
-
-  const keypoints = landmarks.map((kp) => [
-    -(kp.x - 0.5) * 2, // Flip horizontally
-    -(kp.y - 0.5) * 2,
-    kp.z * 2,
-  ]);
-
-  const shape = new THREE.Shape();
-  const firstPoint = keypoints[FACE_OVAL_INDICES[0]];
-  shape.moveTo(firstPoint[0], firstPoint[1]);
-
-  FACE_OVAL_INDICES.forEach((index) => {
-    const [x, y] = keypoints[index];
-    shape.lineTo(x, y);
-  });
-
-  const geometry = new THREE.ShapeGeometry(shape);
-  faceMesh.geometry.dispose();
-  faceMesh.geometry = geometry;
-}
-
-/********************************************************************/
-//  Update Earrings Position with Smoothing
-/********************************************************************/
-function updateEarrings(landmarks) {
-  if (!leftEarring || !rightEarring || landmarks.length === 0) return;
-
-  let leftX = -(landmarks[LEFT_EAR_BOTTOM].x - 0.5) * 2;
-  let leftY = -(landmarks[LEFT_EAR_BOTTOM].y - 0.5) * 2;
-
-  let rightX = -(landmarks[RIGHT_EAR_BOTTOM].x - 0.5) * 2;
-  let rightY = -(landmarks[RIGHT_EAR_BOTTOM].y - 0.5) * 2;
-
-  // Smooth position using an exponential moving average
-  leftEarBuffer.x = alpha * leftX + (1 - alpha) * leftEarBuffer.x;
-  leftEarBuffer.y = alpha * leftY + (1 - alpha) * leftEarBuffer.y;
-
-  rightEarBuffer.x = alpha * rightX + (1 - alpha) * rightEarBuffer.x;
-  rightEarBuffer.y = alpha * rightY + (1 - alpha) * rightEarBuffer.y;
-
-  leftEarring.position.set(leftEarBuffer.x, leftEarBuffer.y - 0.07, 0.1);
-  rightEarring.position.set(rightEarBuffer.x, rightEarBuffer.y - 0.07, 0.1);
 }
 
 /********************************************************************/

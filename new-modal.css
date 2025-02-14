@@ -4,6 +4,8 @@ video {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
+  width: 640px;
+  height: 480px;
 }
 
 section {
