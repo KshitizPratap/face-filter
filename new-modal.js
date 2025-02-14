@@ -154,9 +154,11 @@ function updateEarrings(landmarks) {
 
   let leftX = -(landmarks[LEFT_EAR_BOTTOM].x - 0.5) * 2;
   let leftY = -(landmarks[LEFT_EAR_BOTTOM].y - 0.5) * 2;
+  let leftZ = landmarks[LEFT_EAR_BOTTOM].z;
 
   let rightX = -(landmarks[RIGHT_EAR_BOTTOM].x - 0.5) * 2;
   let rightY = -(landmarks[RIGHT_EAR_BOTTOM].y - 0.5) * 2;
+  let rightZ = landmarks[RIGHT_EAR_BOTTOM].z;
 
   // Smooth position using an exponential moving average
   leftEarBuffer.x = alpha * leftX + (1 - alpha) * leftEarBuffer.x;
@@ -167,14 +169,14 @@ function updateEarrings(landmarks) {
 
   // Update earring positions
   leftEarring.position.set(
-    leftEarBuffer.x + 0.025,
-    leftEarBuffer.y - 0.025,
-    0.1
+    leftEarBuffer.x + 0.035,
+    leftEarBuffer.y - 0.07,
+    -0.1
   );
   rightEarring.position.set(
-    rightEarBuffer.x - 0.025,
-    rightEarBuffer.y - 0.025,
-    0.1
+    rightEarBuffer.x - 0.05,
+    rightEarBuffer.y - 0.07,
+    -0.1
   );
 }
 
