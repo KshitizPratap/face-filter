@@ -340,7 +340,7 @@ export function handleEarringsPosition(e) {
 
   if (name === "position-x") {
     position1[0] = value / 1000;
-    position2[0] = value / 1000 - distance;
+    position2[0] = value / 1000 + distance;
   } else if (name === "position-y") {
     position1[1] = -value / 1000;
     position2[1] = -value / 1000;
@@ -349,6 +349,12 @@ export function handleEarringsPosition(e) {
     position1[0] = -earringPosition.distance / 2;
     position2[0] = earringPosition.distance / 2;
   }
+
+  console.log("[]", {
+    distance: earringPosition.distance,
+    position1: position1[0],
+    position2: position2[0],
+  });
 
   predictWebcam();
 }
