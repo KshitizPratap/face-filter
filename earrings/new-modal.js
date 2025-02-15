@@ -126,8 +126,8 @@ function createEarrings() {
   JEWELLERYMESH[1] = new THREE.Mesh(geometry, rightMaterial);
 
   // Initial positions (will be updated dynamically)
-  JEWELLERYMESH[0].position.set(-0.5, 0, 0);
-  JEWELLERYMESH[1].position.set(0.5, 0, 0);
+  // JEWELLERYMESH[0].position.set(-0.5, 0, 0);
+  // JEWELLERYMESH[1].position.set(0.5, 0, 0);
 
   JEWELLERYMESH[0].scale.set(...scale);
   JEWELLERYMESH[1].scale.set(...scale);
@@ -242,20 +242,6 @@ export async function enableCam(index) {
     });
 }
 
-export function nextPrevJewelleryHandler(action) {
-  const jewelleryArray = [...jewelleryConfig["earrings"]];
-  const length = jewelleryArray.length;
-
-  if (action === "next") {
-    selectedJewelleryIndex = (selectedJewelleryIndex + 1) % length;
-  } else {
-    selectedJewelleryIndex =
-      selectedJewelleryIndex - 1 < 0 ? length - 1 : selectedJewelleryIndex - 1;
-  }
-
-  handleTryOn(selectedJewelleryIndex, jewelleryArray[selectedJewelleryIndex]);
-}
-
 /********************************************************************/
 //  Face Detection & 3D Mesh Update
 /********************************************************************/
@@ -281,6 +267,20 @@ async function predictWebcam() {
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
+}
+
+export function nextPrevJewelleryHandler(action) {
+  const jewelleryArray = [...jewelleryConfig["earrings"]];
+  const length = jewelleryArray.length;
+
+  if (action === "next") {
+    selectedJewelleryIndex = (selectedJewelleryIndex + 1) % length;
+  } else {
+    selectedJewelleryIndex =
+      selectedJewelleryIndex - 1 < 0 ? length - 1 : selectedJewelleryIndex - 1;
+  }
+
+  handleTryOn(selectedJewelleryIndex, jewelleryArray[selectedJewelleryIndex]);
 }
 
 export const handleTryOn = (index, card) => {

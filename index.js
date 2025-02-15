@@ -26,18 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .querySelector("#necklace-position-y")
     .addEventListener("input", handleNecklacePosition);
 
-  document
-    .querySelector("#earrings-position-x")
-    .addEventListener("input", handleEarringsPosition);
-
-  document
-    .querySelector("#earrings-position-y")
-    .addEventListener("input", handleEarringsPosition);
-
-  document
-    .querySelector("#earrings-distance")
-    .addEventListener("input", handleEarringsPosition);
-
   document.querySelector(".compare").addEventListener("click", () => {
     isComparisonActive = !isComparisonActive;
     init_comparison();
@@ -134,7 +122,7 @@ const handleTryOn = (id, card, index) => {
       canvasContainer.classList.add("removeCanvasContainer");
       document.querySelector("body").removeChild(backdrop);
       isComparisonActive = false;
-      init_comparison();
+      closeCompareComponent();
     });
 
     document.querySelector("body").prepend(backdrop);
@@ -168,10 +156,8 @@ function downloadImage() {
 
 function positionController(jewellery_type) {
   if (jewellery_type === "necklace") {
-    document.querySelector("#earringsControllers").style.display = "none";
     document.querySelector("#necklaceControllers").style.display = "block";
   } else {
-    document.querySelector("#earringsControllers").style.display = "block";
     document.querySelector("#necklaceControllers").style.display = "none";
   }
 }

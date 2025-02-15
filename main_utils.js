@@ -37,9 +37,6 @@ function applyGradientFade(texture) {
  * - Appends or remove depending of the global variable *isComparisonActive*
  */
 function init_comparison() {
-  const jewellerySelectionContainer = document.querySelector(
-    ".jewellerySelectionContainer"
-  );
   const carouselArrow = document.querySelectorAll(".canvasContainer img.arrow");
   const compareContainer = document.querySelector(".comparisonContainer");
   const jewelleryDetails = document.querySelector(".jewelleryDetails");
@@ -58,23 +55,45 @@ function init_comparison() {
     carouselArrow[1].style.display = "none";
     jewelleryDetails.style.display = "none";
   } else {
-    compareContainer.style.display = "none";
-    jewelleryPreviewContainer.style.display = "none";
-    compareButton.innerText = "Compare";
-    carouselArrow[0].style.display = "block";
-    carouselArrow[1].style.display = "block";
-    jewelleryDetails.style.display = "block";
+    selectedJewelleryIndex = firstCompareJewelleryIdx;
 
-    if (jewellerySelectionContainer) {
-      jewellerySelectionContainer.remove();
-    }
-
-    JEWELLERYMESH.forEach((mesh) => {
-      GROUPOBJ3D.remove(mesh);
-    });
-
-    JEWELLERYMESH = [];
+    closeCompareComponent();
+    handleTryOn(
+      jewellery_type,
+      jewelleryConfig[jewellery_type][selectedJewelleryIndex],
+      selectedJewelleryIndex
+    );
   }
+}
+
+function closeCompareComponent() {
+  const jewellerySelectionContainer = document.querySelector(
+    ".jewellerySelectionContainer"
+  );
+  const carouselArrow = document.querySelectorAll(".canvasContainer img.arrow");
+  const compareContainer = document.querySelector(".comparisonContainer");
+  const jewelleryDetails = document.querySelector(".jewelleryDetails");
+  const compareButton = document.querySelector("button.compare span");
+  const jewelleryPreviewContainer = document.querySelector(
+    ".compareJewelleryContainer"
+  );
+
+  compareContainer.style.display = "none";
+  jewelleryPreviewContainer.style.display = "none";
+  compareButton.innerText = "Compare";
+  carouselArrow[0].style.display = "block";
+  carouselArrow[1].style.display = "block";
+  jewelleryDetails.style.display = "block";
+
+  if (jewellerySelectionContainer) {
+    jewellerySelectionContainer.remove();
+  }
+
+  JEWELLERYMESH.forEach((mesh) => {
+    GROUPOBJ3D.remove(mesh);
+  });
+
+  JEWELLERYMESH = [];
 }
 
 /**
