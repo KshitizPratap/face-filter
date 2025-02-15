@@ -224,11 +224,6 @@ function updateEarrings(landmarks) {
 /********************************************************************/
 
 export async function enableCam(index) {
-  if (!faceLandmarker) {
-    alert("Face Landmarker is still loading. Please try again..");
-    return;
-  }
-
   const canvas = document.getElementById("renderer");
   canvas.style.display = "block";
   selectedJewelleryIndex = index;
@@ -289,6 +284,11 @@ function animate() {
 }
 
 export const handleTryOn = (index, card) => {
+  if (!faceLandmarker) {
+    alert("Face Landmarker is still loading. Please try again..");
+    return;
+  }
+
   const canvasContainer = document.querySelector(".canvasContainer");
   canvasContainer.classList.remove("removeCanvasContainer");
 
@@ -342,8 +342,8 @@ export function handleEarringsPosition(e) {
     position1[0] = value / 1000;
     position2[0] = value / 1000 - distance;
   } else if (name === "position-y") {
-    position1[1] = (value - 100) / 1000;
-    position2[1] = (value - 100) / 1000;
+    position1[1] = -value / 1000;
+    position2[1] = -value / 1000;
   } else {
     earringPosition.distance = -value / 1000;
     position1[0] = -earringPosition.distance / 2;
