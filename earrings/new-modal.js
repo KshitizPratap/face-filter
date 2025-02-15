@@ -350,11 +350,5 @@ export function handleEarringsPosition(e) {
     position2[0] = earringPosition.distance / 2;
   }
 
-  console.log("[]", {
-    distance: earringPosition.distance,
-    position1: position1[0],
-    position2: position2[0],
-  });
-
   predictWebcam();
 }
