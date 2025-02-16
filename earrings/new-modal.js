@@ -75,7 +75,7 @@ function createFaceMesh() {
   });
 
   faceMesh = new THREE.Mesh(geometry, material);
-  faceMesh.scale.set(2, 1.75, 1);
+  faceMesh.scale.set(2.1, 1.75, 1);
   scene.add(faceMesh);
 }
 
@@ -146,7 +146,7 @@ function updateFaceMesh(landmarks) {
 
   const keypoints = landmarks.map((kp) => [
     -(kp.x - 0.5) * 2, // Flip horizontally
-    -(kp.y - 0.5) * 2,
+    -(kp.y - 0.5) * 1.5,
     kp.z * 2,
   ]);
 
@@ -347,9 +347,9 @@ export function handleEarringsPosition(e) {
     position1[1] = -value / 1000;
     position2[1] = -value / 1000;
   } else {
-    earringPosition.distance = -value / 1000;
-    position1[0] = -earringPosition.distance / 2;
-    position2[0] = earringPosition.distance / 2;
+    earringPosition.distance = value / 1000;
+    position1[0] = earringPosition.distance / 2;
+    position2[0] = -earringPosition.distance / 2;
   }
 
   predictWebcam();
