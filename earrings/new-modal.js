@@ -339,12 +339,6 @@ export const handleTryOn = (index, card) => {
 export function handleEarringsPosition(e) {
   const { distance, position1, position2 } = earringPosition;
   const { value, name } = e.target;
-  console.log("[]", {
-    position1: position1[0],
-    position2: position2[0],
-    value,
-    distance,
-  });
 
   if (name === "position-x") {
     position1[0] = value / 10000;
