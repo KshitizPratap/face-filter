@@ -24,11 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", downloadImage);
 
   document
-    .querySelector("#left-arrow")
+    .querySelector("#right-arrow")
     .addEventListener("click", () => nextPrevJewelleryHandler("next"));
 
   document
-    .querySelector("#right-arrow")
+    .querySelector("#left-arrow")
     .addEventListener("click", () => nextPrevJewelleryHandler("prev"));
 });
 

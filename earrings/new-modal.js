@@ -93,11 +93,13 @@ function createEarrings() {
     jewelleryConfig.earrings[selectedJewelleryIndex];
   const second_position = [-position[0], ...position.slice(1)];
 
-  earringPosition = {
-    position1: position,
-    position2: second_position,
-    distance: Math.abs(2 * position[0]),
-  };
+  if (!earringPosition.position1.length) {
+    earringPosition = {
+      position1: position,
+      position2: second_position,
+      distance: Math.abs(2 * position[0]),
+    };
+  }
 
   // Load earring textures
   const leftTexture = new THREE.TextureLoader().load(image);
@@ -337,10 +339,16 @@ export const handleTryOn = (index, card) => {
 export function handleEarringsPosition(e) {
   const { distance, position1, position2 } = earringPosition;
   const { value, name } = e.target;
+  console.log("[]", {
+    position1: position1[0],
+    position2: position2[0],
+    value,
+    distance,
+  });
 
   if (name === "position-x") {
-    position1[0] = value / 1000;
-    position2[0] = value / 1000 + distance;
+    position1[0] = value / 10000;
+    position2[0] = value / 10000 - distance;
   } else if (name === "position-y") {
     position1[1] = -value / 1000;
     position2[1] = -value / 1000;
