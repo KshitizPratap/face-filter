@@ -93,13 +93,11 @@ function createEarrings() {
     jewelleryConfig.earrings[selectedJewelleryIndex];
   const second_position = [-position[0], ...position.slice(1)];
 
-  if (!earringPosition.position1.length) {
-    earringPosition = {
-      position1: position,
-      position2: second_position,
-      distance: Math.abs(2 * position[0]),
-    };
-  }
+  earringPosition = {
+    position1: position,
+    position2: second_position,
+    distance: Math.abs(2 * position[0]),
+  };
 
   // Load earring textures
   const leftTexture = new THREE.TextureLoader().load(image);
@@ -117,19 +115,17 @@ function createEarrings() {
 
   const leftMaterial = new THREE.MeshBasicMaterial({
     map: leftTexture,
+    opacity: 0,
     transparent: true,
   });
   const rightMaterial = new THREE.MeshBasicMaterial({
     map: rightTexture,
+    opacity: 0,
     transparent: true,
   });
 
   JEWELLERYMESH[0] = new THREE.Mesh(geometry, leftMaterial);
   JEWELLERYMESH[1] = new THREE.Mesh(geometry, rightMaterial);
-
-  // Initial positions (will be updated dynamically)
-  // JEWELLERYMESH[0].position.set(-0.5, 0, 0);
-  // JEWELLERYMESH[1].position.set(0.5, 0, 0);
 
   JEWELLERYMESH[0].scale.set(...scale);
   JEWELLERYMESH[1].scale.set(...scale);
