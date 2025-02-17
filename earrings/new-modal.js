@@ -278,6 +278,7 @@ export function nextPrevJewelleryHandler(action) {
       selectedJewelleryIndex - 1 < 0 ? length - 1 : selectedJewelleryIndex - 1;
   }
 
+  resetPositionControllers();
   handleTryOn(selectedJewelleryIndex, jewelleryArray[selectedJewelleryIndex]);
 }
 
@@ -319,6 +320,7 @@ export const handleTryOn = (index, card) => {
     backdrop.addEventListener("click", () => {
       canvasContainer.classList.add("removeCanvasContainer");
       document.querySelector("body").removeChild(backdrop);
+      resetPositionControllers();
     });
 
     document.querySelector("body").prepend(backdrop);
@@ -349,4 +351,17 @@ export function handleEarringsPosition(e) {
   }
 
   predictWebcam();
+}
+
+function resetPositionControllers() {
+  const controllersIds = [
+    "earrings-position-x",
+    "earrings-position-y",
+    "earrings-distance",
+  ];
+
+  controllersIds.forEach((id) => {
+    const controller = document.querySelector(`#${id}`);
+    controller.value = (controller.min + controller.max) / 2;
+  });
 }
